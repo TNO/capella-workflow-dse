@@ -1,5 +1,13 @@
 name: CI
-on: [push, pull_request]
+
+on: 
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g. 0.1.0)'
+        required: true
 
 jobs:
   build:
@@ -16,10 +24,39 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: Setup Git
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
       - name: Generate target platform
         run: mvn clean verify -f releng/nl.tno.capella.workflow.dse.target/pom.xml
+      - name: Set release version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          mvn org.eclipse.tycho:tycho-versions-plugin:2.7.5:set-version -Dtycho.mode=maven -DnewVersion="${{ github.event.inputs.version }}"
+          git add -A
+          git commit -m "Version ${{ github.event.inputs.version }}"
+          git tag -a "${{ github.event.inputs.version }}" -m "${{ github.event.inputs.version }}"
       - name: Build
         run: mvn clean verify
-      - uses: actions/upload-artifact@v3
+      
+      # Below only runs on release
+      - name: Set SNAPSHOT version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          mvn org.eclipse.tycho:tycho-versions-plugin:2.7.5:set-version -Dtycho.mode=maven -DnewVersion="${{ github.event.inputs.version }}-SNAPSHOT"
+          git add -A
+          git commit -m "Version ${{ github.event.inputs.version }}-SNAPSHOT"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        if: github.event_name == 'workflow_dispatch'
         with:
-          path: releng/nl.tno.capella.workflow.dse.product/dist/*
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tags: true
+          branch: main
+      - name: Upload release
+        uses: softprops/action-gh-release@v1
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          files: releng/nl.tno.capella.workflow.dse.product/dist/*

@@ -38,3 +38,6 @@ To setup a development environment (Windows only):
     - To launch the tests, right click `nl.tno.capella.workflow.dse.test/Test.launch` -> "Run As" -> "Test"
     - To launch the app, open a terminal, navigate to `plugins/nl.tno.capella.workflow.dse.app/app` and execute `npm start -- -- "../../../tests/nl.tno.capella.workflow.dse.test/model/3D Reconstruction"`
         - Before doing this make sure you launched the DSE at least once via the product (`tests/nl.tno.capella.workflow.dse.test/model/3D Reconstruction/gen/dse` has to exist)
+
+## Creating a new release
+To create a new release, go to the [CI GitHub action](https://github.com/TNO/capella-workflow-dse/actions/workflows/ci.yml) -> Run workflow -> Fill in version -> Run workflow. Wait till build completes and add the [release notes](https://github.com/TNO/capella-workflow-dse/releases).
