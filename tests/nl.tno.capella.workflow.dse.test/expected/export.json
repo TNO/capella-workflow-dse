@@ -1,0 +1,558 @@
+{
+  "name": "platform:/resource/3D%20Reconstruction/3D%20Reconstruction.aird",
+  "functionalChains": [
+    {
+      "id": "cb46235b-34e9-40ae-b470-0cd60aa94c9c",
+      "name": "1. Acquire 2D Image",
+      "elements": [
+        {
+          "id": "bc89fc72-19dd-4e63-aae1-3d87aa3bd5b2",
+          "label": "1.2. Acquire 2D Image",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": [
+            {
+              "id": "9a2d4f33-8e3d-48db-9341-40e411d0bfa3",
+              "label": "WF params.Function params",
+              "propertyValues": [
+                {
+                  "label": "Duration",
+                  "id": "41369819-bf3a-404f-8287-6b77fb816600",
+                  "value": 5.0,
+                  "type": {
+                    "type": "float"
+                  }
+                },
+                {
+                  "label": "ResourceID",
+                  "id": "ac2fdea1-75d9-4f53-bbd8-d88c7449be05",
+                  "value": "42",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "7b23f23d-d343-4e6c-8933-a69e22f285f9",
+                  "value": "",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "82f839fa-1d04-48ea-96de-9129036d1a1d",
+          "label": "1.1. Move to Next Position",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "65a06200-d3e4-41b3-83dc-3a7bfb6780ec",
+          "label": "1.0 Prepare for 2D acquisitions",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": [
+            {
+              "id": "5b18e6e4-2b8a-4496-aa37-7bc7034113be",
+              "label": "WF params.Function params",
+              "propertyValues": [
+                {
+                  "label": "Duration",
+                  "id": "28cdbe9f-6cc5-4804-9c41-5d3bfee2c250",
+                  "value": 0.1,
+                  "type": {
+                    "type": "float"
+                  }
+                },
+                {
+                  "label": "ResourceID",
+                  "id": "c8702b81-a548-4e5e-b66f-3e05c7d41b35",
+                  "value": "",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "fa76dc1c-cb29-45cc-ae38-76c37023e2e8",
+                  "value": null,
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "d2051d68-e635-48a3-ace4-2c208691cbb8",
+          "label": "1.3 Finalize 2D acquisitions",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": [
+            {
+              "id": "254fcaf6-dbcf-45c2-8f4b-b424bd020347",
+              "label": "WF params.Function params",
+              "propertyValues": [
+                {
+                  "label": "Duration",
+                  "id": "c72b684d-f859-4680-84b1-1154b5f55ed3",
+                  "value": 0.1,
+                  "type": {
+                    "type": "float"
+                  }
+                },
+                {
+                  "label": "ResourceID",
+                  "id": "fd150584-0563-442d-a108-b75110ccf343",
+                  "value": "",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "006c53c3-e91c-4044-a9fb-214d126aab49",
+                  "value": null,
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fc353c52-ef7e-43d0-896f-0d2b31875309",
+          "controlNodeKind": "ITERATE",
+          "type": "ControlNode",
+          "propertyValueGroups": [
+            {
+              "id": "6503f24d-555b-45b0-a2ab-f88338b133ed",
+              "label": "WF params.Control Node params",
+              "propertyValues": [
+                {
+                  "label": "Repetitions",
+                  "id": "56a37e72-c21a-4e56-a3b2-d98f0053658e",
+                  "value": 10,
+                  "type": {
+                    "type": "int"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "8a017962-2ea0-4bcc-a988-65bd5b7ab7c8",
+                  "value": null,
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "06eb6aa3-9bf9-4159-8b45-36a8db908295",
+          "controlNodeKind": "ITERATE",
+          "type": "ControlNode",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "36c3b892-8625-4d9e-a9a0-10e1b895ea3e",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "8e7c485f-ef2c-464f-a410-b49d5c87db64",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "2348b6ce-787e-433c-9390-72309103e8df",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "44df5547-3607-4f67-b94c-7329b1f740b0",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "17eafd7b-836a-488a-a293-ee93d6ceeea3",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "699d452f-8d26-45d0-8597-346299037dfe",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        }
+      ]
+    },
+    {
+      "id": "ca5a9016-d51a-4e51-a8ba-da396aa2d5b4",
+      "name": "2. Process 2D Image",
+      "elements": [
+        {
+          "id": "a071afad-8443-43ed-9580-1b84f6af9386",
+          "label": "2.2. Process 2D Image",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": [
+            {
+              "id": "39aad10d-ae11-4bb9-8523-716f7c13fb05",
+              "label": "WF params.Function params",
+              "propertyValues": [
+                {
+                  "label": "Duration",
+                  "id": "b5b8e6ac-003d-4b93-8213-c2549e8c5029",
+                  "value": 8.0,
+                  "type": {
+                    "type": "float"
+                  }
+                },
+                {
+                  "label": "ResourceID",
+                  "id": "ac8c8662-1e84-4708-bb55-7424eb98afb6",
+                  "value": "1",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "61712b6e-e7e1-4bad-85eb-358704a9e6ca",
+                  "value": null,
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "6354d127-43f0-42a1-82cb-fd221001fe09",
+          "label": "2.1. Pre-process 2D Image",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": [
+            {
+              "id": "73cfada3-9bd4-4c41-9bab-e9a7593a018b",
+              "label": "WF params.Function params",
+              "propertyValues": [
+                {
+                  "label": "Duration",
+                  "id": "336ce8f8-455d-49d5-a7b3-c050f5452de6",
+                  "value": 1.0,
+                  "type": {
+                    "type": "float"
+                  }
+                },
+                {
+                  "label": "ResourceID",
+                  "id": "9ed5f4e4-67ba-4ea8-8373-83cf4308a74e",
+                  "value": "",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "bbb2c4bd-8962-4855-9cea-ec212480562b",
+                  "value": "",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cc43804e-204d-40fb-a27e-69d5b05caac4",
+          "label": "2.0 Prepare for 2D image processing",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": [
+            {
+              "id": "31af58ea-9c52-404a-b189-8efa6cae506c",
+              "label": "WF params.Function params",
+              "propertyValues": [
+                {
+                  "label": "Duration",
+                  "id": "68cb20ca-b0d4-45ea-9bcd-fd5b0a982aa9",
+                  "value": 0.1,
+                  "type": {
+                    "type": "float"
+                  }
+                },
+                {
+                  "label": "ResourceID",
+                  "id": "9a8358cf-605f-4c99-a039-851d921a2d16",
+                  "value": "",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "a6745186-0d8f-4dd5-8c84-81232ffe3bad",
+                  "value": null,
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2f177c2d-b8eb-4b67-8574-0c384b88cd49",
+          "label": "2.3. Finalize 2D image processing",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": [
+            {
+              "id": "cd9ecfed-15da-427e-ba55-5dd99b5ed29d",
+              "label": "WF params.Function params",
+              "propertyValues": [
+                {
+                  "label": "Duration",
+                  "id": "47ad6e75-d46e-40ed-8e6b-5b5ffbf07ef0",
+                  "value": 0.1,
+                  "type": {
+                    "type": "float"
+                  }
+                },
+                {
+                  "label": "ResourceID",
+                  "id": "a614523d-fc01-42e5-8146-8dcd9a1ede97",
+                  "value": "",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "befde9be-53cd-46d3-b984-c91414cec83b",
+                  "value": null,
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "20de8731-b343-4513-b345-97cc1f4722d5",
+          "controlNodeKind": "ITERATE",
+          "type": "ControlNode",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "5969ee1b-cb41-4465-aac4-8fc6256d7e7e",
+          "controlNodeKind": "ITERATE",
+          "type": "ControlNode",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "46aec785-c8ad-4047-ac7c-81060db764a1",
+          "controlNodeKind": "OR",
+          "type": "ControlNode",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "d1305d32-b7a7-4197-8bfe-c3ef5857a193",
+          "controlNodeKind": "OR",
+          "type": "ControlNode",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "829d2d4e-1ef0-4e24-920e-0616dc00e4da",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "b20ccfab-500a-46b2-bf4e-2f08d2686bfe",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "078ed232-3730-45e9-9b3a-a06669e0c7f2",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "3858efca-cdd7-4017-a136-49228c3297cc",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "7288188f-53f3-44f6-8613-494dd9e67e10",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "3df88251-b035-442c-a4ab-b8b73fe56a2e",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "4811f20e-0b72-4ce2-bda3-7a55cec648f5",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "a2e8e893-62ff-4289-84c4-f3c545318cd4",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "d53e81ea-774c-43b9-bef9-f67ab1ced179",
+          "type": "SequenceLink",
+          "propertyValueGroups": [
+            {
+              "id": "0377aa26-ce39-4ff3-bcb5-2fd72f387742",
+              "label": "WF params.Sequence Link params",
+              "propertyValues": [
+                {
+                  "label": "Weight",
+                  "id": "e27c09de-554f-48e8-9837-dbe517210931",
+                  "value": 1.0,
+                  "type": {
+                    "type": "float"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6c4a15a4-12c0-4b9a-8cc7-1154e38be73c",
+      "name": "0. 3D Reconstruction",
+      "elements": [
+        {
+          "id": "47fd7c23-5894-49f3-92f3-63d8c2bfa3dd",
+          "label": "3. Create 3D Image from 2D Images",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": [
+            {
+              "id": "df304c8c-61b8-4bec-acef-4b64818c702b",
+              "label": "WF params.Function params",
+              "propertyValues": [
+                {
+                  "label": "Duration",
+                  "id": "53f777b4-af13-466d-ab67-aecac18d9b29",
+                  "value": 5.0,
+                  "type": {
+                    "type": "float"
+                  }
+                },
+                {
+                  "label": "ResourceID",
+                  "id": "dc30eaf7-1089-4c37-a5b1-ae9af9ed8447",
+                  "value": "",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "eb3a909a-f11d-446d-bd91-c317961006ff",
+                  "value": null,
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "81bb30e6-d4ff-45a0-acc2-e63e66f1e3d5",
+          "label": "0. Initiate 3D reconstruction",
+          "type": "FunctionalChainInvolvementFunction",
+          "propertyValueGroups": [
+            {
+              "id": "0dac77a7-35d0-4ddb-8bee-05e577ea5a3d",
+              "label": "WF params.Function params",
+              "propertyValues": [
+                {
+                  "label": "Duration",
+                  "id": "f3ca807b-351c-4108-b21d-bfe6807ca514",
+                  "value": 0.05,
+                  "type": {
+                    "type": "float"
+                  }
+                },
+                {
+                  "label": "ResourceID",
+                  "id": "e8b5ec77-a189-42ca-9535-642019036d67",
+                  "value": "",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "label": "Description",
+                  "id": "394f1943-cc1b-4e84-bfd8-a007e6d84be7",
+                  "value": null,
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "23ce8958-1828-465c-a1dd-fa8010d9f665",
+          "controlNodeKind": "AND",
+          "type": "ControlNode",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "481cf165-55de-4258-bf88-78fc94ec13ef",
+          "controlNodeKind": "AND",
+          "type": "ControlNode",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "1304dfe2-d61a-46ba-8e1e-bdbb7a69e1a8",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "581925ce-cebb-4957-987b-a828203451fc",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "e99a72c3-167b-461f-8bb8-9118fb9e5d00",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "f6b3e721-791b-4f4e-bf56-a302b78be040",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "f2455158-4ae4-4c00-819a-a3579cf8725c",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "992b4893-aca7-4335-bdb0-2d4f17e6752a",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        },
+        {
+          "id": "0f07c99a-44ed-479a-94b3-c799e1768a78",
+          "type": "SequenceLink",
+          "propertyValueGroups": []
+        }
+      ]
+    }
+  ]
+}

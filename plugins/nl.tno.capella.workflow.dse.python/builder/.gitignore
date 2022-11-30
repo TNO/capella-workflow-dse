@@ -1,0 +1,6 @@
+venv_builder/
+build/
+dist/
+__pycache__/
+python.spec
+upx/

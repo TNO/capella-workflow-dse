@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022 ESI (TNO)
+
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>nl.tno.capella.workflow.dse</groupId>
+    <artifactId>nl.tno.capella.workflow.dse.root</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>releng/nl.tno.capella.workflow.dse.product</module>
+        <module>plugins</module>
+        <module>tests/nl.tno.capella.workflow.dse.test</module>
+    </modules>
+
+    <organization>
+        <name>ESI (TNO)</name>
+        <url>https://esi.nl</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Eclipse Public License - Version 2.0</name>
+            <url>http://www.eclipse.org/legal/epl-2.0</url>
+            <comments>SPDX-License-Identifier: EPL-2.0</comments>
+        </license>
+    </licenses>
+
+    <properties>
+        <tycho-version>2.2.0</tycho-version>
+        <license-maven-plugin.version>4.1</license-maven-plugin.version>
+        <exec-maven-plugin-version>3.1.0</exec-maven-plugin-version>
+        <download-maven-plugin-version>1.6.0</download-maven-plugin-version>
+        <graphviz-version>7.0.2</graphviz-version>
+        <maven-clean-plugin-version>2.4.1</maven-clean-plugin-version>
+        <capella-product-win32-x64-url>https://mirrors.jevincanders.net/eclipse/capella/core/products/releases/5.2.0-R20211130-125709/capella-5.2.0.202111301257-win32-win32-x86_64.zip</capella-product-win32-x64-url>
+        <pvmt-url>https://artifactory.thalesdigital.io/artifactory/mvn-public/com/thalesgroup/vpd/property/com.thalesgroup.vpd.property.repository/50.5.1/com.thalesgroup.vpd.property.repository-50.5.1.zip</pvmt-url>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${license-maven-plugin.version}</version>
+                <configuration>
+                    <mapping>
+                        <tsx>JAVADOC_STYLE</tsx>
+                        <ts>JAVADOC_STYLE</ts>
+                        <tpd>JAVADOC_STYLE</tpd>
+                        <poosl>JAVADOC_STYLE</poosl>
+                    </mapping>
+                    <licenseSets>
+                        <licenseSet>
+                            <useDefaultExcludes>true</useDefaultExcludes>
+                            <inlineHeader>
+Copyright (c) 2022 ESI (TNO)
+
+This program and the accompanying materials are made
+available under the terms of the Eclipse Public License 2.0
+which is available at https://www.eclipse.org/legal/epl-2.0/
+
+SPDX-License-Identifier: EPL-2.0
+                            </inlineHeader>
+                            <excludes>
+                                <exclude>**/__pycache__/**</exclude>
+                                <exclude>**/expected/**</exclude>
+                                <exclude>**/capella-product/**</exclude>
+                                <exclude>**/requirements.txt</exclude>
+                                <exclude>**/platform.target</exclude>
+                                <exclude>**/.polyglot.pom.tycho</exclude>
+                                <exclude>**/python.spec</exclude>
+                                <exclude>**/dist/**</exclude>
+                                <exclude>**/.webpack/**</exclude>
+                                <exclude>**/gen/**</exclude>
+                                <exclude>**/venv_builder/**</exclude>
+                                <exclude>**/builder/build/**</exclude>
+                                <exclude>**/p2/**</exclude>
+                                <exclude>**/builder/upx/**</exclude>
+                                <exclude>**/*.capella</exclude>
+                                <exclude>**/*.aird</exclude>
+                                <exclude>**/*.afm</exclude>
+                                <exclude>**/.polyglot.META-INF</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-maven-plugin</artifactId>
+                <version>${tycho-version}</version>
+                <extensions>true</extensions>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <version>${tycho-version}</version>
+                <configuration>
+                    <target>
+                        <artifact>
+                            <groupId>nl.tno.capella.workflow.dse</groupId>
+                            <artifactId>nl.tno.capella.workflow.dse.root</artifactId>
+                            <version>1.0.0-SNAPSHOT</version>
+                            <classifier>releng/nl.tno.capella.workflow.dse.target/platform</classifier>
+                        </artifact>
+                    </target>
+                    <environments>
+                        <environment>
+                            <os>win32</os>
+                            <ws>win32</ws>
+                            <arch>x86_64</arch>
+                        </environment>
+                    </environments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

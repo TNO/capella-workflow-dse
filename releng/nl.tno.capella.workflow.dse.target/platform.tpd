@@ -1,0 +1,30 @@
+/**
+ * Copyright (c) 2022 ESI (TNO)
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+target "target-platform"
+
+include "capella.tpd"
+
+with source, requirements
+
+location capella "https://download.eclipse.org/capella/core/updates/releases/5.2.0-R20211130-125709/org.polarsys.capella.rcp.site" {
+	org.polarsys.capella.rcp.feature.group
+}
+
+location capella-tests "https://download.eclipse.org/capella/core/updates/releases/5.2.0-R20211130-125709/org.polarsys.capella.test.site" {
+	org.polarsys.capella.test.feature.feature.group
+}
+
+location eclipse "http://download.eclipse.org/releases/2020-06" {
+	com.google.gson
+}
+
+location pvmt "file:/p2/pvmt" {
+    com.thalesgroup.vpd.property.feature.feature.group
+}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022 ESI (TNO)
+
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>nl.tno.capella.workflow.dse</groupId>
+    <artifactId>nl.tno.capella.workflow.dse.app</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>eclipse-plugin</packaging>
+
+    <parent>
+        <groupId>nl.tno.capella.workflow.dse</groupId>
+        <artifactId>nl.tno.capella.workflow.dse.plugins</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>npm</executable>
+                    <arguments>
+                        <argument>run</argument>
+                        <argument>ci-package-copy</argument>
+                    </arguments>
+                    <workingDirectory>${project.basedir}/app</workingDirectory>      
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

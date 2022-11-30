@@ -1,0 +1,91 @@
+/**
+ * Copyright (c) 2022 ESI (TNO)
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+import "datatypes/PlaceChange.poosl"
+import "TRACE/TraceStructures.poosl"
+
+process class Places(numberOfTransitions : Integer, numberOfPlaces : Integer, initialMarking : Array)
+// represent all places
+// each place is index in array, each place holds number of tokens
+ports
+	placesIO
+messages
+	placesIO!Enable(Boolean)
+	placesIO?CheckEnabledness(Array)
+	placesIO?ChangePostPlaces(Array)
+	placesIO!NewMarking(Integer)
+variables
+	placesArray : Array // array of Integers (number of tokens)
+	prePlaceChanges : Array
+	placeChanges : Array
+	enabled : Boolean
+init
+	initialize()()
+methods
+	initialize()() | |
+		placesArray := new(Array) resize(numberOfPlaces) putAll(0);
+		placesArray := initialMarking deepCopy();
+		placeChanges := new(Array);
+		managePlaces()()
+
+	managePlaces()() | |
+		sel
+			placesIO?CheckEnabledness(prePlaceChanges);
+			enabled := true;
+			// check if transition is allowed
+			EnabledCheck(prePlaceChanges)();
+			placesIO!Enable(enabled);
+			if enabled // assume this enabled transition is executed, so remove tokens
+			then
+				RemoveTokensFromPlaces(prePlaceChanges)()
+			fi
+		or
+			placesIO?ChangePostPlaces(placeChanges);
+			AddTokensToPlaces(placeChanges)();
+			SendMarkingChanged()()
+		les;
+		managePlaces()()
+
+	EnabledCheck(changes : Array)() | i : Integer, p : Integer, c : Integer |
+		i := 1;
+		while (i <= changes size()) & enabled do
+			p := changes at(i) getPlace();
+			c := changes at(i) getChange();
+			if (placesArray at(p) < c) then
+				enabled := false
+			fi;
+			i := i + 1
+		od
+
+	RemoveTokensFromPlaces(changes : Array)() | i : Integer, p : Integer, c : Integer |
+		i := 1;
+		while (i <= changes size()) do
+			p := changes at(i) getPlace();
+			c := changes at(i) getChange();
+			placesArray putAt(p, placesArray at(p) - c);
+			i := i + 1
+		od
+
+	AddTokensToPlaces(changes : Array)() | i : Integer, p : Integer, c : Integer |
+		i := 1;
+		while (i <= changes size()) do
+			p := changes at(i) getPlace();
+			c := changes at(i) getChange();
+			placesArray putAt(p, placesArray at(p) + c);
+			i := i + 1
+		od
+
+	SendMarkingChanged()() | number : Integer |
+		number := 1;
+		while number <= numberOfTransitions do
+			placesIO!NewMarking(number);
+			number := number + 1
+		od
+
+	

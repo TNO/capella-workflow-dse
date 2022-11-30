@@ -1,0 +1,176 @@
+/**
+ * Copyright (c) 2022 ESI (TNO)
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+// A resource on which claims can be made.
+data class Resource extends Object
+variables
+	Id : Integer
+	Name : String
+methods
+	Id() : Integer return Id
+	Name() : String return Name
+		
+	@Init
+	setId(id : Integer) : Resource
+		Id := id;
+		return self
+		
+	@Init
+	setName(name : String) : Resource
+		Name := name;
+		return self
+		
+	asString() : String
+		return "R " + Id printString + " 1 false;name=" + Name
+		
+	printString : String
+		return self^ printString + "(" + Id printString + ", " 
+		                               + Name + 
+		                           ")"
+
+// Claim request
+data class ClaimRequest extends Object
+variables
+	ResourceName : String
+	Attributes : String
+	TransitionNumber : Integer
+methods
+	ResourceName() : String return ResourceName
+	Attributes() : String return Attributes
+	TransitionNumber() : Integer return TransitionNumber
+
+	@Init
+	setResourceName(name : String) : ClaimRequest
+		ResourceName := name;
+		return self
+	
+	@Init
+	setAttributes(a : String) : ClaimRequest
+		Attributes := a;
+		return self
+	
+	@Init
+	setTransitionNumber(n : Integer) : ClaimRequest
+		TransitionNumber := n;
+		return self
+
+    printString : String
+		return self^ printString + "(" + ResourceName + ", " 
+		                               + Attributes + ", "
+		                               + TransitionNumber printString+
+		                           ")"
+
+// A claim on a resource.
+data class Claim extends Object
+variables
+	Id : Integer
+	Attributes : String
+	Resource : Resource
+	StartTime : Real
+	StopTime : Real
+	TransitionNumber : Integer
+methods
+	Id() : Integer return Id
+	Attributes() : String return Attributes
+	Resource() : Resource return Resource
+	StartTime() : Real return StartTime
+	StopTime() : Real return StopTime
+	TransitionNumber() : Integer return TransitionNumber
+
+	@Init
+	init(id : Integer, attributes : String, resource : Resource, startTime : Real) : Claim
+		Id := id;
+		Attributes := attributes;
+		Resource := resource;
+		StartTime := startTime;
+		StopTime := -1.0;
+		return self
+
+	setStopTime(stopTime : Real) : Claim
+		StopTime := stopTime;
+		return self
+		
+	@Init
+	setTransitionNumber(n : Integer) : Claim
+		TransitionNumber := n;
+		return self
+	
+	asString() : String
+		return "C " + Id printString + " " + StartTime printString + " " + StopTime printString + " " + Resource Id() printString() + " 1;" + Attributes
+
+    printString : String
+		return self^ printString + "(" + Id printString + ", " 
+		                               + Attributes + ", " 
+		                               + Resource printString + ", " 
+		                               + StartTime printString + ", " 
+		                               + StopTime printString + ", "
+		                               + TransitionNumber printString +
+		                           ")"
+
+// A collection of claims.
+data class Claims extends Object
+variables
+	Content : Array
+methods
+	Content() : Array return Content
+	
+	@Init
+	init() : Claims
+		Content := new(Array);
+		self clear();
+		return self
+
+	// Adds a claim to this collection.
+	add(claim : Claim) : Claims
+		Content resize(Content size() + 1);
+		Content putAt(Content size(), claim);
+		return self
+
+	// Clears this collection of claims.
+	clear() : Claims
+		Content resize(0);
+		return self
+		
+	// Get the i-th claim in this dependency, where i is assumed to be within bounds.
+	get(i : Integer) : Claim
+		return Content at(i)
+		
+	// The number of claims in this collection.
+	size() : Integer
+		return Content size()
+		
+	printString : String
+		return self^ printString + "(" + Content printString + ")"
+
+// A dependency between two claims
+data class Dependency extends Object
+variables
+	Id : Integer
+	From : Claim
+	To : Claim
+methods
+	Id() : Integer return Id
+	From() : Claim return From
+	To() : Claim return To
+
+	@Init
+	init(id : Integer, from : Claim, to : Claim) : Dependency
+		Id := id;
+		From := from;
+		To := to;
+		return self
+	
+	asString() : String
+		return "D " + Id printString + " 2 " + From Id() printString + " " + To Id() printString + ";type=app,color=gray"
+	
+    printString : String
+		return self^ printString + "(" + Id printString + ", " 
+		                               + From printString + ", " 
+		                               + To printString + 
+		                           ")"	

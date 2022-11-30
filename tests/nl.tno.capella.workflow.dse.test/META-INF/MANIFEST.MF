@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Capella Workflow DSE Test
+Bundle-SymbolicName: nl.tno.capella.workflow.dse.test;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: nl.tno.capella.workflow.dse.test
+Bundle-RequiredExecutionEnvironment: JavaSE-14
+Require-Bundle: org.polarsys.capella.test.framework,
+ nl.tno.capella.workflow.dse,
+ org.eclipse.emf.ecore

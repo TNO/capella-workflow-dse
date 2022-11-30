@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Capella Workflow DSE
+Bundle-SymbolicName: nl.tno.capella.workflow.dse;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: nl.tno.capella.workflow.dse
+Bundle-RequiredExecutionEnvironment: JavaSE-14
+Require-Bundle: org.eclipse.ui,
+ org.polarsys.capella.core.model.handler,
+ org.eclipse.gmf.runtime.notation.edit,
+ org.eclipse.sirius.diagram,
+ org.polarsys.capella.core.data.gen,
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.sirius.ui,
+ nl.tno.capella.workflow.dse.app,
+ nl.tno.capella.workflow.dse.graphviz,
+ nl.tno.capella.workflow.dse.python,
+ com.google.gson
+Export-Package: nl.tno.capella.workflow.dse.petrinet,
+ nl.tno.capella.workflow.dse.pvmt,
+ nl.tno.capella.workflow.dse.walker
+Eclipse-BundleShape: dir

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022 ESI (TNO)
+
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>nl.tno.capella.workflow.dse</groupId>
+    <artifactId>nl.tno.capella.workflow.dse.target</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <tycho-version>2.2.0</tycho-version>
+        <exec-maven-plugin-version>3.1.0</exec-maven-plugin-version>
+        <download-maven-plugin-version>1.6.8</download-maven-plugin-version>
+        <maven-clean-plugin-version>2.4.1</maven-clean-plugin-version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven-clean-plugin-version}</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>p2</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>${download-maven-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <id>download-pvmt</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://artifactory.thalesdigital.io/artifactory/mvn-public/com/thalesgroup/vpd/property/com.thalesgroup.vpd.property.repository/50.5.1/com.thalesgroup.vpd.property.repository-50.5.1.zip</url>
+                            <outputDirectory>${project.basedir}/p2/pvmt</outputDirectory>
+                            <unpack>true</unpack>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Required because TPD cannot handle relative paths -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <id>absolute</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>python</executable>
+                            <arguments>
+                                <argument>tpd.py</argument>
+                                <argument>platform.tpd</argument>
+                                <argument>absolute</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>relative</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>python</executable>
+                            <arguments>
+                                <argument>tpd.py</argument>
+                                <argument>platform.tpd</argument>
+                                <argument>relative</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho.extras</groupId>
+                <artifactId>tycho-eclipserun-plugin</artifactId>
+                <version>${tycho-version}</version>
+                <configuration>
+                    <repositories>
+                        <repository>
+                            <id>oxygen</id>
+                            <layout>p2</layout>
+                            <url>http://download.eclipse.org/releases/oxygen/201709271000</url>
+                        </repository>
+                        <repository>
+                            <id>targetplatform</id>
+                            <layout>p2</layout>
+                            <url>http://pdulth.github.io/fr.obeo.releng.targetplatform/p2/latest</url>
+                        </repository>
+                    </repositories>
+                    <dependencies>
+                        <dependency>
+                            <artifactId>fr.obeo.releng.targetplatform-feature</artifactId>
+                            <type>eclipse-feature</type>
+                        </dependency>
+                        <dependency>
+                            <artifactId>org.eclipse.equinox.p2.sdk</artifactId>
+                            <type>eclipse-feature</type>
+                        </dependency>
+                    </dependencies>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate.target</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <executionEnvironment>JavaSE-1.8</executionEnvironment>
+                            <applicationsArgs>
+                                <args>-application fr.obeo.releng.targetplatform.targetPlatform.converter platform.tpd</args>
+                            </applicationsArgs>
+                        </configuration>
+                        <goals>
+                            <goal>eclipse-run</goal>
+                        </goals>
+                    </execution>
+                    </executions>
+                </plugin>
+        </plugins>
+    </build>
+</project>

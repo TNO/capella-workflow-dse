@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022 ESI (TNO)
+
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>nl.tno.capella.workflow.dse</groupId>
+    <artifactId>nl.tno.capella.workflow.dse.graphviz</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>eclipse-plugin</packaging>
+
+    <parent>
+        <groupId>nl.tno.capella.workflow.dse</groupId>
+        <artifactId>nl.tno.capella.workflow.dse.plugins</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>${download-maven-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <id>download-graphviz-win32-x64</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${graphviz-version}/windows_10_msbuild_Release_graphviz-${graphviz-version}-win32.zip</url>
+                            <outputDirectory>${project.basedir}/dist/graphviz-win32-x64</outputDirectory>
+                            <unpack>true</unpack>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022 ESI (TNO)
+
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="nl.tno.capella.workflow.dse.ExportCommand"
+            id="nl.tno.capella.workflow.dse.commandExport"
+            name="Workflow DSE: export">
+      </command>
+      <command
+            defaultHandler="nl.tno.capella.workflow.dse.ImportExportPVMTCommand"
+            id="nl.tno.capella.workflow.dse.commandImportExportPVMT"
+            name="Import export PVMT">
+         <commandParameter
+               id="nl.tno.capella.workflow.dse.commandImportExportPVMT.type"
+               name="type"
+               optional="false">
+         </commandParameter>
+      </command>
+      <command
+            defaultHandler="nl.tno.capella.workflow.dse.RunDSECommand"
+            id="nl.tno.capella.workflow.dse.commandRunDSE"
+            name="Workflow DSE: run">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="nl.tno.capella.workflow.dse.commandExport"
+               label="Workflow DSE: export"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="nl.tno.capella.workflow.dse.commandRunDSE"
+               label="Workflow DSE: run"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:capella.project.explorer#PopupMenu?after=group.port">
+         <command
+               commandId="nl.tno.capella.workflow.dse.commandImportExportPVMT"
+               label="Export PVMT values"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false">
+                     <adapt
+                           type="org.eclipse.core.resources.IResource">
+                        <test
+                              property="org.eclipse.core.resources.extension"
+                              value="aird">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+            <parameter
+                  name="nl.tno.capella.workflow.dse.commandImportExportPVMT.type"
+                  value="export">
+            </parameter>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:capella.project.explorer#PopupMenu?after=group.port">
+         <command
+               commandId="nl.tno.capella.workflow.dse.commandImportExportPVMT"
+               label="Import PVMT values"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false">
+                     <adapt
+                           type="org.eclipse.core.resources.IResource">
+                        <test
+                              property="org.eclipse.core.resources.extension"
+                              value="aird">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+            <parameter
+                  name="nl.tno.capella.workflow.dse.commandImportExportPVMT.type"
+                  value="import">
+            </parameter>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.polarsys.capella.common.ef.editingDomainListener">
+      <editingDomainListener
+            class="nl.tno.capella.workflow.dse.ModelChecker">
+      </editingDomainListener>
+   </extension>
+
+</plugin>

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Capella Workflow DSE Graphviz
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-14
+Bundle-SymbolicName: nl.tno.capella.workflow.dse.graphviz;singleton:=true
+Automatic-Module-Name: nl.tno.capella.workflow.dse.graphviz
+Eclipse-BundleShape: dir
+Require-Bundle: org.eclipse.core.runtime
+Export-Package: nl.tno.capella.workflow.dse.graphviz

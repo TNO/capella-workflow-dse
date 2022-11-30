@@ -1,0 +1,102 @@
+/**
+ * Copyright (c) 2022 ESI (TNO)
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+import "datatypes/Token.poosl"
+import "datatypes/PlaceChange.poosl"
+import "TRACE/TraceStructures.poosl"
+
+// OR transition which chooses between output places based on weights
+process class ChoiceStartTransition(number : Integer, prePlaceChanges : Array, postPlaceChanges : Array,
+	weights : Array)
+ports
+	placesIO
+messages
+	placesIO!CheckEnabledness(Array)
+	placesIO?Enable(Boolean)
+	placesIO!ChangePostPlaces(Array)
+	placesIO?NewMarking(Integer)
+variables
+	enabled : Boolean
+	markingChanged : Boolean
+	sumWeights : Integer
+	rand : RandomGenerator
+	choiceArray : Array // array to represent intervals for choice of index
+	chosenIndex : Integer
+	postChanges : Array
+	// next for testing only: record which indexes have been chosen
+	indexChoises : Array
+init
+	initialize()()
+methods
+	initialize()() | |
+		postChanges := new(Array) resize(1);
+		ComputeSumWeights()();
+		choiceArray := new(Array) resize(weights size());
+		ComputeChoiceArray()();
+		// for testing
+		indexChoises := new(Array) resize(weights size()) putAll(0);
+		// choose arbitrary seed 
+		rand := new(RandomGenerator) randomiseSeed();
+		markingChanged := true;
+		par
+			TryToExecute()()
+		and
+			GetMarkingInfo()()
+		rap
+
+	ComputeSumWeights()() | index : Integer |
+		index := 1;
+		sumWeights := 0;
+		while index <= weights size() do
+			sumWeights := sumWeights + weights at(index);
+			index := index + 1
+		od
+
+	// array to represent intervals which determine which index will be chosen: 
+	// [0, weights[1]>  [weights[1], weights[1]+weights[2]>  [weights[1]+weights[2], weights[1]+weights[2]+weights[3]> 
+	ComputeChoiceArray()() | index : Integer, sum : Integer |
+		index := 1;
+		sum := 0; // sum of first index-1 weights
+		while index <= weights size() do
+			sum := sum + weights at(index);
+			choiceArray putAt(index, sum);
+			index := index + 1
+		od
+
+	TryToExecute()() | |
+		[markingChanged] placesIO!CheckEnabledness(prePlaceChanges);  
+		placesIO?Enable(enabled);
+		if enabled then
+			ChooseIndex()();
+			postChanges putAt(1, postPlaceChanges at(chosenIndex));
+			placesIO!ChangePostPlaces(postChanges)
+		else
+			markingChanged := false
+		fi;
+		TryToExecute()()
+
+	ChooseIndex()() | n : Integer, index : Integer |
+		n := rand randomInt(sumWeights);
+		index := 1;
+		while index <= choiceArray size() do
+			if n < choiceArray at(index) then
+				chosenIndex := index;
+				index := choiceArray size() + 1 // stop while
+			else
+				index := index + 1
+			fi
+		od;
+		// for testing
+		indexChoises putAt(chosenIndex, indexChoises at(chosenIndex)+1)
+
+	GetMarkingInfo()() | i : Integer |
+		placesIO?NewMarking(i | i == number);
+		markingChanged := true;
+		GetMarkingInfo()()
+	

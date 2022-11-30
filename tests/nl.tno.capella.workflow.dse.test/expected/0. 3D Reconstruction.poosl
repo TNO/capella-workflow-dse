@@ -1,0 +1,308 @@
+import "lib/Places.poosl"
+import "lib/Transition.poosl"
+import "lib/ChoiceStartTransition.poosl"
+import "lib/datatypes/PlaceChange.poosl"
+import "lib/TRACE/Logger.poosl"
+system
+ports
+
+instances
+places : Places(numberOfTransitions := 21,
+                numberOfPlaces := 27,
+                initialMarking := new(Array) resize(27) putAll(0) 
+                                  putAt(5,1) putAt(6,1) putAt(12,1) putAt(18,1) putAt(19,1))
+
+// Places:
+// 1: ITS22
+// 2: ANDE33
+// 3: ANDE43
+// 4: ITG25
+// 5: ITL37
+// 6: RES6_1
+// 7: ITS14
+// 8: ITG17
+// 9: ANDS31
+// 10: ITE18
+// 11: ITE19
+// 12: RES1_42
+// 13: END45
+// 14: ITS13
+// 15: ITE26
+// 16: ORE30
+// 17: ITE27
+// 18: START44
+// 19: ITL35
+// 20: N42
+// 21: ITS21
+// 22: ORS29
+// 23: N36
+// 24: ANDS40
+// 25: ANDS41
+// 26: ORST29
+// 27: ORST29
+
+t34 : Transition(number := 1,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(2) setChange(2)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(3) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t34Unknown"),
+                 name := "AND34",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t39 : Transition(number := 2,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(27) setChange(1)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(16) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t39Unknown"),
+                 name := "OR39",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t8 : Transition(number := 3,
+                 prePlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(1) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(20) setChange(1)),
+                 duration := 1.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(22) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t8Unknown"),
+                 name := "2.1. Pre-process 2D Image",
+                 level := 2,
+                 levelnames := new(Array) resize(2) putAt(1,"2. Process 2D Image") putAt(2,"2.1. Pre-process 2D Image"),
+                 logging := true)
+
+t10 : Transition(number := 4,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(17) setChange(2)),
+                 duration := 0.1,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(2) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t10Unknown"),
+                 name := "2.3. Finalize 2D image processing",
+                 level := 2,
+                 levelnames := new(Array) resize(2) putAt(1,"2. Process 2D Image") putAt(2,"2.3. Finalize 2D image processing"),
+                 logging := true)
+
+t7 : Transition(number := 5,
+                 prePlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(6) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(26) setChange(1)),
+                 duration := 8.0,
+                 postPlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(6) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(16) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "1"),
+                 name := "2.2. Process 2D Image",
+                 level := 2,
+                 levelnames := new(Array) resize(2) putAt(1,"2. Process 2D Image") putAt(2,"2.2. Process 2D Image"),
+                 logging := true)
+
+t9 : Transition(number := 6,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(25) setChange(1)),
+                 duration := 0.1,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(4) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t9Unknown"),
+                 name := "2.0 Prepare for 2D image processing",
+                 level := 2,
+                 levelnames := new(Array) resize(2) putAt(1,"2. Process 2D Image") putAt(2,"2.0 Prepare for 2D image processing"),
+                 logging := true)
+
+t2 : Transition(number := 7,
+                 prePlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(12) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(23) setChange(1)),
+                 duration := 5.0,
+                 postPlaceChanges := new(Array) resize(3)
+                     putAt(1, new(PlaceChange) setPlace(12) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(10) setChange(1))
+                     putAt(3, new(PlaceChange) setPlace(20) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "42"),
+                 name := "1.2. Acquire 2D Image",
+                 level := 2,
+                 levelnames := new(Array) resize(2) putAt(1,"1. Acquire 2D Image") putAt(2,"1.2. Acquire 2D Image"),
+                 logging := true)
+
+t11 : Transition(number := 8,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(3) setChange(1)),
+                 duration := 5.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(13) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t11Unknown"),
+                 name := "3. Create 3D Image from 2D Images",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"3. Create 3D Image from 2D Images") putAt(2,"level1"),
+                 logging := true)
+
+t15 : Transition(number := 9,
+                 prePlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(14) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(19) setChange(1)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(7) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t15Unknown"),
+                 name := "ITS15",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t3 : Transition(number := 10,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(7) setChange(1)),
+                 duration := 1.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(23) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t3Unknown"),
+                 name := "1.1. Move to Next Position",
+                 level := 2,
+                 levelnames := new(Array) resize(2) putAt(1,"1. Acquire 2D Image") putAt(2,"1.1. Move to Next Position"),
+                 logging := true)
+
+t23 : Transition(number := 11,
+                 prePlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(21) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(5) setChange(1)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(1) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t23Unknown"),
+                 name := "ITS23",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t28 : Transition(number := 12,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(15) setChange(1)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(17) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(5) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t28Unknown"),
+                 name := "ITE28",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t20 : Transition(number := 13,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(10) setChange(1)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(11) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(19) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t20Unknown"),
+                 name := "ITE20",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t32 : Transition(number := 14,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(9) setChange(1)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(24) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(25) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t32Unknown"),
+                 name := "AND32",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t4 : Transition(number := 15,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(24) setChange(1)),
+                 duration := 0.1,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(8) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t4Unknown"),
+                 name := "1.0 Prepare for 2D acquisitions",
+                 level := 2,
+                 levelnames := new(Array) resize(2) putAt(1,"1. Acquire 2D Image") putAt(2,"1.0 Prepare for 2D acquisitions"),
+                 logging := true)
+
+t38 : Transition(number := 16,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(16) setChange(1)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(15) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t38Unknown"),
+                 name := "N38",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t12 : Transition(number := 17,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(18) setChange(1)),
+                 duration := 0.1,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(9) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t12Unknown"),
+                 name := "0. Initiate 3D reconstruction",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"0. Initiate 3D reconstruction") putAt(2,"level1"),
+                 logging := true)
+
+t5 : Transition(number := 18,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(11) setChange(10)),
+                 duration := 0.1,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(2) setChange(1)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t5Unknown"),
+                 name := "1.3 Finalize 2D acquisitions",
+                 level := 2,
+                 levelnames := new(Array) resize(2) putAt(1,"1. Acquire 2D Image") putAt(2,"1.3 Finalize 2D acquisitions"),
+                 logging := true)
+
+t16 : Transition(number := 19,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(8) setChange(1)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(14) setChange(10)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t16Unknown"),
+                 name := "ITG16",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t24 : Transition(number := 20,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(4) setChange(1)),
+                 duration := 0.0,
+                 postPlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(21) setChange(2)),
+                 resourcenames := new(Array) resize(1) putAt(1, "t24Unknown"),
+                 name := "ITG24",
+                 level := 1,
+                 levelnames := new(Array) resize(2) putAt(1,"x") putAt(2,"x"),
+                 logging := false)
+
+t46 : ChoiceStartTransition(number := 21,
+                 prePlaceChanges := new(Array) resize(1)
+                     putAt(1, new(PlaceChange) setPlace(22) setChange(1)),
+                 postPlaceChanges := new(Array) resize(2)
+                     putAt(1, new(PlaceChange) setPlace(26) setChange(1))
+                     putAt(2, new(PlaceChange) setPlace(27) setChange(1)),
+                 weights := new(Array) resize(2) putAt(1, 1) putAt(2, 1))
+
+logger : Logger(resourcenames := new(Array)
+                resize(10) putAt(1,"1") putAt(2,"42") putAt(3,"t8Unknown") putAt(4,"t10Unknown") putAt(5,"t9Unknown") putAt(6,"t11Unknown") putAt(7,"t3Unknown") putAt(8,"t4Unknown") putAt(9,"t12Unknown") putAt(10,"t5Unknown"))
+
+channels
+	{ places.placesIO, t34.placesIO,t39.placesIO,t8.placesIO,t10.placesIO,t7.placesIO,t9.placesIO,t2.placesIO,t11.placesIO,t15.placesIO,t3.placesIO,t23.placesIO,t28.placesIO,t20.placesIO,t32.placesIO,t4.placesIO,t38.placesIO,t12.placesIO,t5.placesIO,t16.placesIO,t24.placesIO,t46.placesIO }
+	{ logger.log, t34.log,t39.log,t8.log,t10.log,t7.log,t9.log,t2.log,t11.log,t15.log,t3.log,t23.log,t28.log,t20.log,t32.log,t4.log,t38.log,t12.log,t5.log,t16.log,t24.log }

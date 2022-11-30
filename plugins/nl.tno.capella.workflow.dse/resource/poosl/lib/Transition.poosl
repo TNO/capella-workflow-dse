@@ -1,0 +1,109 @@
+/**
+ * Copyright (c) 2022 ESI (TNO)
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+import "datatypes/Token.poosl"
+import "datatypes/PlaceChange.poosl"
+import "TRACE/TraceStructures.poosl"
+
+process class Transition(number : Integer, // number of transition
+prePlaceChanges : Array,                   // required tokens on pre places
+duration : Real,                           // duration of function
+postPlaceChanges : Array,                  // tokens on places after execution
+resourcenames : Array,                     // of strings
+name : String,                             // function name
+level: Integer,                            // level
+levelnames : Array,                         // for each level, i.e. index in array, a name
+logging : Boolean)                         // for TRACE
+ports
+	placesIO
+	log
+messages
+	placesIO!CheckEnabledness(Array)
+	placesIO?Enable(Boolean)
+	placesIO!ChangePostPlaces(Array)
+	placesIO?NewMarking(Integer)
+	log!StopClaim(Claim)
+	log?ClaimStarted(Claim)
+	log!StartClaim(ClaimRequest)
+variables
+	enabled : Boolean
+	markingChanged : Boolean
+	attributes : String
+	i : Integer
+	console : Console // to report output
+	claims : Array    // array of claims
+init
+	initialize()()
+methods
+	initialize()() | |
+		ConstructAttributes()();
+		console := new(Console);
+		claims := new(Array) resize(resourcenames size()); 
+		markingChanged := true;
+		par
+			TryToExecute()()
+		and
+			GetMarkingInfo()()
+		rap
+
+	TryToExecute()()
+	    // if there is new marking, check if transition is enabled
+		[markingChanged] placesIO!CheckEnabledness(prePlaceChanges);  
+		placesIO?Enable(enabled);
+		if enabled then
+			// assume that pre places are changed by Places process when transition is enabled
+			if logging then
+				ClaimResources()()
+			fi;
+			if duration > 0.0 then
+				delay duration
+			fi;
+			placesIO!ChangePostPlaces(postPlaceChanges);
+			if name = "END" then
+				console writeLine("Duration: " + currentTime printString + " sec")
+			fi;
+			if logging then
+				StopClaims()()
+			fi
+		else
+			markingChanged := false
+		fi;
+		TryToExecute()()
+
+	ClaimResources()() | index : Integer, claimRequest : ClaimRequest, claim : Claim |
+		index := 1;
+		while (index <= resourcenames size()) do
+			claimRequest := new(ClaimRequest) setResourceName(resourcenames at(index)) 
+			   setAttributes(attributes) setTransitionNumber(number);
+			log!StartClaim(claimRequest);
+			log?ClaimStarted(claim | claim TransitionNumber() = number);
+			claims putAt(index, claim);
+			index := index + 1
+		od
+
+	StopClaims()() | index : Integer |
+		index := 1;
+		while (index <= claims size()) do
+			log!StopClaim(claims at(index));
+			index := index + 1
+		od
+
+	GetMarkingInfo()() | |
+		placesIO?NewMarking(i | i == number);
+		markingChanged := true;
+		GetMarkingInfo()()
+	
+	ConstructAttributes()() | index : Integer | 
+	    attributes := "name="+name +",level="+level printString;
+	    index := 1;
+	    while (index <= levelnames size()) do
+	       attributes := attributes + ",level" + index printString + "name=" + (levelnames at(index));
+	       index := index + 1
+		od
+	

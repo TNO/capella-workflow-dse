@@ -1,0 +1,37 @@
+/**
+ * Copyright (c) 2022 ESI (TNO)
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+data class PlaceChange extends Object
+// change to be made by transition on place
+// place is identified by number
+// change can be positive, negative, or zero
+variables
+	place : Integer
+	change : Integer
+methods
+	@Init
+	setPlace(p : Integer) : PlaceChange
+		place := p;
+		return self
+
+	getPlace : Integer
+		return place
+		
+	@Init
+	setChange(c : Integer) : PlaceChange
+		change := c;
+		return self
+
+	getChange : Integer
+		return change
+
+	printString : String
+		return self^ printString + "(" + place printString + ", " 
+		                               + change printString +
+		                           ")"

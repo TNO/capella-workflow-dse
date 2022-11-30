@@ -1,0 +1,108 @@
+/**
+ * Copyright (c) 2022 ESI (TNO)
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+import "TraceStructures.poosl"
+
+process class Logger(resourcenames : Array)
+// assumption is that resourcenames is an array of different strings
+ports
+	log
+messages
+	log!ClaimStarted(Claim)
+	log?StopClaim(Claim)
+	//log?AddDependency(Claim, Claim)
+	//log?AddDependencies(Claims, Claim)
+	log?StartClaim(ClaimRequest)
+variables
+	claims : Array 
+	dependencies : Array
+	resources : Map // maps resource names to resources
+	trace : FileOut
+init
+	initialize()()
+methods
+	initialize()() | |
+		claims := new(Array) resize(0);
+		dependencies := new(Array) resize(0);
+		resources := new(Map);
+		trace := new(FileOut) destination("../trace.etf") open;
+		trace writeLine("TU SECONDS");
+		trace writeLine("O 0");
+		trace writeLine("T ");
+		CreateResources()();
+		handle()()
+
+	// Create resource for each resource name and add to map and trace
+	CreateResources()() | index : Integer, name : String, resource : Resource |
+		index := 0;
+		while index < resourcenames size() do
+			name := resourcenames at(index + 1);
+			// create resource
+			resource := new(Resource) setId(index) setName(name);
+			resources putAt(name, resource);
+			trace writeLine(resource asString());
+			index := index + 1
+		od
+
+	handle()()
+		sel
+			handleStartClaim()()
+		or
+			handleStopClaim()()
+		//or
+		//	handleAddDependency()()
+		//or
+		//	handleAddDependencies()()
+		les;
+		handle()()
+
+	// Handles requests to start a claim.
+	handleStartClaim()() | claimRequest : ClaimRequest, resource : Resource, claim : Claim |
+		log?StartClaim(claimRequest);
+		resource := resources at(claimRequest ResourceName());
+		// check on nil to detect missing resources
+		if resource = nil
+		then resource error("non existing resource of transition: "+claimRequest TransitionNumber printString())
+		else
+		claim := new(Claim) init(claims size(), claimRequest Attributes(), resource, currentTime)
+			setTransitionNumber(claimRequest TransitionNumber());
+		claims resize(claims size() + 1);
+		claims putAt(claims size(), claim);
+		log!ClaimStarted(claim)
+		fi
+
+	// Handles requests for ending claims.
+	handleStopClaim()() | claim : Claim |
+		log?StopClaim(claim);
+		claim := claim setStopTime(currentTime);
+		trace writeLine(claim asString())
+
+	// Handles the addition of a dependency.
+	//handleAddDependency()() | from : Claim, to : Claim, dependency : Dependency |
+	//	log?AddDependency(from, to);
+	//	if (from Id() != to Id()) then
+	//		dependency := new(Dependency) init(dependencies size(), from, to);
+	//		dependencies resize(dependencies size() + 1);
+	//		dependencies putAt(dependencies size(), dependency);
+	//		trace writeLine(dependency asString())
+	//	fi
+
+	// Handles the addition of a number of dependencies.
+	//handleAddDependencies()() | from : Claims, to : Claim, i : Integer, dependency : Dependency |
+	//	log?AddDependencies(from, to);
+	//	i := 1;
+	//	while (i <= from size()) do
+	//		if (from get(i) Id() != to Id()) then
+	//			dependency := new(Dependency) init(dependencies size(), from get(i), to);
+	//			dependencies resize(dependencies size() + 1);
+	//			dependencies putAt(dependencies size(), dependency);
+	//			trace writeLine(dependency asString())
+	//		fi;
+	//		i := i + 1
+	//	od
