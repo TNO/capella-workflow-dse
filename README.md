@@ -28,7 +28,7 @@ To setup a development environment (Windows only):
 1. Clone this repository, navigate to it in a terminal and execute:
     ```bash
     mvn clean verify -f releng/nl.tno.capella.workflow.dse.target/pom.xml
-    mvn clean package
+    mvn clean verify
     ```
 1. In Eclipse, press "Import projects..." -> "General" -> "Existing Projects into Workspace", click "Next"
 1. Click "Browse" next to "Select root directory" point it to the root of the cloned repository, click "Finish"
@@ -41,3 +41,10 @@ To setup a development environment (Windows only):
 
 ## Creating a new release
 To create a new release, go to the [CI GitHub action](https://github.com/TNO/capella-workflow-dse/actions/workflows/ci.yml) -> Run workflow -> Fill in version -> Run workflow. Wait till build completes and add the [release notes](https://github.com/TNO/capella-workflow-dse/releases).
+
+## License header
+The Maven build uses [license-maven-plugin](https://github.com/mycila/license-maven-plugin) to determine if the correct license headers are used for source files. If the header is incorrect the build fails.
+
+Handy commands:
+- To only run the check execute: `mvn license:check -Dtycho.mode=maven`
+- To automatically add/update execute: `mvn license:format -Dtycho.mode=maven`

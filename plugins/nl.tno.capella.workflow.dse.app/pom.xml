@@ -22,9 +22,9 @@
 
     <parent>
         <groupId>nl.tno.capella.workflow.dse</groupId>
-        <artifactId>nl.tno.capella.workflow.dse.plugins</artifactId>
+        <artifactId>nl.tno.capella.workflow.dse.root</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <relativePath>../../</relativePath>
     </parent>
 
     <build>

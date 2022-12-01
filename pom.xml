@@ -21,7 +21,10 @@
 
     <modules>
         <module>releng/nl.tno.capella.workflow.dse.product</module>
-        <module>plugins</module>
+        <module>plugins/nl.tno.capella.workflow.dse</module>
+        <module>plugins/nl.tno.capella.workflow.dse.graphviz</module>
+        <module>plugins/nl.tno.capella.workflow.dse.python</module>
+        <module>plugins/nl.tno.capella.workflow.dse.app</module>
         <module>tests/nl.tno.capella.workflow.dse.test</module>
     </modules>
 
@@ -116,6 +119,7 @@ SPDX-License-Identifier: EPL-2.0
                 <artifactId>target-platform-configuration</artifactId>
                 <version>${tycho-version}</version>
                 <configuration>
+                    <executionEnvironment>JavaSE-14</executionEnvironment>
                     <target>
                         <artifact>
                             <groupId>nl.tno.capella.workflow.dse</groupId>

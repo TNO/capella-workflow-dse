@@ -17,7 +17,7 @@
       <command
             defaultHandler="nl.tno.capella.workflow.dse.ExportCommand"
             id="nl.tno.capella.workflow.dse.commandExport"
-            name="Workflow DSE: export">
+            name="Workflow DSE: Export">
       </command>
       <command
             defaultHandler="nl.tno.capella.workflow.dse.ImportExportPVMTCommand"
@@ -32,7 +32,7 @@
       <command
             defaultHandler="nl.tno.capella.workflow.dse.RunDSECommand"
             id="nl.tno.capella.workflow.dse.commandRunDSE"
-            name="Workflow DSE: run">
+            name="Workflow DSE: Run">
       </command>
    </extension>
    <extension
@@ -42,7 +42,7 @@
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <command
                commandId="nl.tno.capella.workflow.dse.commandExport"
-               label="Workflow DSE: export"
+               label="Workflow DSE: Export"
                style="push">
          </command>
       </menuContribution>
@@ -51,7 +51,7 @@
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <command
                commandId="nl.tno.capella.workflow.dse.commandRunDSE"
-               label="Workflow DSE: run"
+               label="Workflow DSE: Run"
                style="push">
          </command>
       </menuContribution>

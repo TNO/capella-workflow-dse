@@ -13,15 +13,18 @@ import os, subprocess, glob, zipfile, sys, shutil
 REPOSITORIES = [
     'http://www.es.ele.tue.nl/rotalumis/repository/release',
     'https://download.eclipse.org/trace4cps/v0.1/update-site',
-    'https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.22.0/',
+    'https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.22.0',
     'https://eclipse.github.io/poosl/release/1.0.2',
+    'https://download.eclipse.org/tools/orbit/downloads/2020-06',
+    'jar:file:/' + os.path.abspath(glob.glob('target/*.zip')[0]).replace('\\', '/') + '!/',
     *['jar:file:/' + os.path.abspath(z).replace('\\', '/') + '!/' for z in glob.glob('p2/*.zip')]
 ]
 
 FEATURES = [
     'org.eclipse.trace4cps.feature.feature.group',
     'org.eclipse.poosl.feature.feature.group',
-    'com.thalesgroup.vpd.property.feature.feature.group'
+    'com.thalesgroup.vpd.property.feature.feature.group',
+    'nl.tno.capella.workflow.dse'
 ]
 
 COMMAND = [
@@ -46,14 +49,6 @@ for arch in os.listdir('capella-product'):
     print('Installing dependencies')
     if subprocess.call(COMMAND, cwd=path, shell=True) != 0:
         raise Exception("Dependencies install failed")
-
-    # Install plugins
-    plugins = glob.glob('../../plugins/*/target/nl.tno.capella.workflow.dse*.jar')
-    for plugin in plugins:
-        plugin_name = os.path.splitext(os.path.basename(plugin))[0]
-        print(f"Installing {plugin_name}")
-        with zipfile.ZipFile(plugin, 'r') as zip_ref:
-            zip_ref.extractall("\\\\?\\" + os.path.abspath(os.path.join(path, 'plugins', plugin_name)))
 
     # Update eclipse.product (otherwise .poosl files cannot be executed)
     print('Updating config.ini')
