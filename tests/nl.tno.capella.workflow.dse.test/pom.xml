@@ -17,13 +17,13 @@
 
     <groupId>nl.tno.capella.workflow.dse</groupId>
     <artifactId>nl.tno.capella.workflow.dse.test</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>eclipse-test-plugin</packaging>
 
     <parent>
         <groupId>nl.tno.capella.workflow.dse</groupId>
         <artifactId>nl.tno.capella.workflow.dse.root</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.1.0</version>
         <relativePath>../../</relativePath>
     </parent>
 

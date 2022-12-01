@@ -16,7 +16,7 @@
 
     <groupId>nl.tno.capella.workflow.dse</groupId>
     <artifactId>nl.tno.capella.workflow.dse.root</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -124,7 +124,7 @@ SPDX-License-Identifier: EPL-2.0
                         <artifact>
                             <groupId>nl.tno.capella.workflow.dse</groupId>
                             <artifactId>nl.tno.capella.workflow.dse.root</artifactId>
-                            <version>1.0.0-SNAPSHOT</version>
+                            <version>0.1.0</version>
                             <classifier>releng/nl.tno.capella.workflow.dse.target/platform</classifier>
                         </artifact>
                     </target>
