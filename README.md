@@ -12,9 +12,7 @@ Standalone version can be downloaded from the [release page](https://github.com/
 - [Rotalumis](https://www.es.ele.tue.nl/poosl/Tools/rotalumis/)
 - [Property Values Management Tools (PVMT)](https://www.eclipse.org/capella/addons.html)
 
-More info:
-- Paper: TODO
-- Tutorial: TODO
+Fore more info, see the [tutorial](tutorial.pdf).
 
 ## Setup development environment
 To setup a development environment (Windows only):
