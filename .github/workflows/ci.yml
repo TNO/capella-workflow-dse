@@ -18,33 +18,28 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '14'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+          cache: 'maven'
       - name: Setup Git
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
       - name: Generate target platform
-        run: mvn clean verify -f releng/nl.tno.capella.workflow.dse.target/pom.xml
+        run: .\mvnw clean verify -f releng/nl.tno.capella.workflow.dse.target/pom.xml
       - name: Set release version
         if: github.event_name == 'workflow_dispatch'
         run: |
-          mvn org.eclipse.tycho:tycho-versions-plugin:2.7.5:set-version -Dtycho.mode=maven -DnewVersion="${{ github.event.inputs.version }}"
+          .\mvnw org.eclipse.tycho:tycho-versions-plugin:2.7.5:set-version -Dtycho.mode=maven -DnewVersion="${{ github.event.inputs.version }}"
           git add -A
           git commit -m "Version ${{ github.event.inputs.version }}"
           git tag -a "${{ github.event.inputs.version }}" -m "${{ github.event.inputs.version }}"
       - name: Build
-        run: mvn clean verify
+        run: .\mvnw clean verify
       
       # Below only runs on release
       - name: Set SNAPSHOT version
         if: github.event_name == 'workflow_dispatch'
         run: |
-          mvn org.eclipse.tycho:tycho-versions-plugin:2.7.5:set-version -Dtycho.mode=maven -DnewVersion="${{ github.event.inputs.version }}-SNAPSHOT"
+          .\mvnw org.eclipse.tycho:tycho-versions-plugin:2.7.5:set-version -Dtycho.mode=maven -DnewVersion="${{ github.event.inputs.version }}-SNAPSHOT"
           git add -A
           git commit -m "Version ${{ github.event.inputs.version }}-SNAPSHOT"
       - name: Push changes

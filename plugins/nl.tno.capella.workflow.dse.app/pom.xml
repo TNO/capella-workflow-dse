@@ -30,24 +30,28 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>${exec-maven-plugin-version}</version>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>${frontend-maven-plugin-version}</version>
                 <executions>
                     <execution>
-                        <phase>generate-resources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>install-node-and-npm</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run ci-package-copy</arguments>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>npm</executable>
-                    <arguments>
-                        <argument>run</argument>
-                        <argument>ci-package-copy</argument>
-                    </arguments>
-                    <workingDirectory>${project.basedir}/app</workingDirectory>      
+                    <nodeVersion>${node-version}</nodeVersion>
+                    <workingDirectory>app/</workingDirectory>
                 </configuration>
             </plugin>
         </plugins>

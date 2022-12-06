@@ -16,8 +16,7 @@ Fore more info, see the [tutorial](tutorial.pdf).
 
 ## Setup development environment
 To setup a development environment (Windows only):
-1. First make sure the prerequisites are installed on your machine: Python 3.10, Maven, Java 14 and Node.js 18
-1. Remove the [Windows `MAX_PATH` limitation](https://docs.python.org/3/using/windows.html#removing-the-max-path-limitation)
+1. First make sure Java 14 is installed and on your path. You can download it from [here](https://adoptopenjdk.net/releases.html?variant=openjdk14&jvmVariant=hotspot). The version can be checked by executing `java -version`.
 1. Download and start the [Eclipse installer](https://www.eclipse.org/downloads/)
 1. In the right-top click the "hamburger" -> "ADVANCED MODE..."
 1. Select "Eclipse IDE for Eclipse Committers", set "Product Version" to "2020-06" and point "Java 1.8+ VM" to the location of Java 14, click "Next" twice.
@@ -25,8 +24,8 @@ To setup a development environment (Windows only):
 1. Start Eclipse
 1. Clone this repository, navigate to it in a terminal and execute:
     ```bash
-    mvn clean verify -f releng/nl.tno.capella.workflow.dse.target/pom.xml
-    mvn clean verify
+    mvnw clean verify -f releng/nl.tno.capella.workflow.dse.target/pom.xml
+    mvnw clean package
     ```
 1. In Eclipse, press "Import projects..." -> "General" -> "Existing Projects into Workspace", click "Next"
 1. Click "Browse" next to "Select root directory" point it to the root of the cloned repository, click "Finish"

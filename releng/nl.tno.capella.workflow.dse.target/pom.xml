@@ -24,6 +24,7 @@
         <exec-maven-plugin-version>3.1.0</exec-maven-plugin-version>
         <download-maven-plugin-version>1.6.8</download-maven-plugin-version>
         <maven-clean-plugin-version>2.4.1</maven-clean-plugin-version>
+        <python-version>3.11.0</python-version>
     </properties>
 
     <build>
@@ -56,6 +57,18 @@
                             <unpack>true</unpack>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>download-python</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://www.python.org/ftp/python/${python-version}/python-${python-version}-embed-amd64.zip</url>
+                            <outputDirectory>${project.basedir}/python/python-win32-x64</outputDirectory>
+                            <unpack>true</unpack>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -71,7 +84,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>python</executable>
+                            <executable>${project.basedir}/python/python-win32-x64/python.exe</executable>
                             <arguments>
                                 <argument>tpd.py</argument>
                                 <argument>platform.tpd</argument>
@@ -86,7 +99,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>python</executable>
+                            <executable>${project.basedir}/python/python-win32-x64/python.exe</executable>
                             <arguments>
                                 <argument>tpd.py</argument>
                                 <argument>platform.tpd</argument>

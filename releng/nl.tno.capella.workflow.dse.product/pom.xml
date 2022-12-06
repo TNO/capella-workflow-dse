@@ -38,6 +38,26 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven-clean-plugin-version}</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>target</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>capella-product</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>dist</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>p2</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-p2-director-plugin</artifactId>
                 <version>${tycho-version}</version>
@@ -55,18 +75,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>${maven-clean-plugin-version}</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>capella-product</directory>
-                            <directory>target</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
@@ -96,6 +104,18 @@
                             <outputDirectory>${project.basedir}/p2</outputDirectory>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>download-python</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://www.python.org/ftp/python/${python-version}/python-${python-version}-embed-amd64.zip</url>
+                            <outputDirectory>${project.basedir}/python/python-win32-x64</outputDirectory>
+                            <unpack>true</unpack>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -111,7 +131,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>python</executable>
+                    <executable>${project.basedir}/python/python-win32-x64/python.exe</executable>
                     <arguments>
                         <argument>build.py</argument>
                         <argument>${project.version}</argument>

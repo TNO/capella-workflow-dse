@@ -42,12 +42,16 @@
     </licenses>
 
     <properties>
+        <frontend-maven-plugin-version>1.12.1</frontend-maven-plugin-version>
         <tycho-version>2.2.0</tycho-version>
+        <node-version>v18.12.1</node-version>
         <license-maven-plugin.version>4.1</license-maven-plugin.version>
         <exec-maven-plugin-version>3.1.0</exec-maven-plugin-version>
         <download-maven-plugin-version>1.6.0</download-maven-plugin-version>
         <graphviz-version>7.0.2</graphviz-version>
         <maven-clean-plugin-version>2.4.1</maven-clean-plugin-version>
+        <python-version>3.11.0</python-version>
+        <snakes-url>https://github.com/fpom/snakes/archive/e99fe3d964c2e17da18ddee9b852d36fdb536da1.zip</snakes-url>
         <capella-product-win32-x64-url>https://mirrors.jevincanders.net/eclipse/capella/core/products/releases/5.2.0-R20211130-125709/capella-5.2.0.202111301257-win32-win32-x86_64.zip</capella-product-win32-x64-url>
         <pvmt-url>https://artifactory.thalesdigital.io/artifactory/mvn-public/com/thalesgroup/vpd/property/com.thalesgroup.vpd.property.repository/50.5.1/com.thalesgroup.vpd.property.repository-50.5.1.zip</pvmt-url>
     </properties>
@@ -84,17 +88,18 @@ SPDX-License-Identifier: EPL-2.0
                                 <exclude>**/requirements.txt</exclude>
                                 <exclude>**/platform.target</exclude>
                                 <exclude>**/.polyglot.pom.tycho</exclude>
+                                <exclude>**/dependencies/**</exclude>
                                 <exclude>**/python.spec</exclude>
                                 <exclude>**/dist/**</exclude>
                                 <exclude>**/.webpack/**</exclude>
                                 <exclude>**/gen/**</exclude>
                                 <exclude>**/venv_builder/**</exclude>
-                                <exclude>**/builder/build/**</exclude>
+                                <exclude>**/python/python-win32-x64/**</exclude>
                                 <exclude>**/p2/**</exclude>
-                                <exclude>**/builder/upx/**</exclude>
                                 <exclude>**/*.capella</exclude>
                                 <exclude>**/*.aird</exclude>
                                 <exclude>**/*.afm</exclude>
+                                <exclude>**/*.pom.tycho</exclude>
                                 <exclude>**/.polyglot.META-INF</exclude>
                             </excludes>
                         </licenseSet>

@@ -30,23 +30,65 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven-clean-plugin-version}</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>dist</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>${download-maven-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <id>download-python-win32-x64</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://www.python.org/ftp/python/${python-version}/python-${python-version}-embed-amd64.zip</url>
+                            <outputDirectory>${project.basedir}/dist/python-win32-x64</outputDirectory>
+                            <unpack>true</unpack>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-snakes</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>${snakes-url}</url>
+                            <outputDirectory>${project.basedir}/dependencies/snakes</outputDirectory>
+                            <unpack>true</unpack>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${exec-maven-plugin-version}</version>
                 <executions>
                     <execution>
-                        <phase>generate-resources</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>python</executable>
+                    <executable>${project.basedir}/dist/python-win32-x64/python.exe</executable>
                     <arguments>
                         <argument>build.py</argument>
                     </arguments>
-                    <workingDirectory>${project.basedir}/builder</workingDirectory>      
+                    <workingDirectory>${project.basedir}</workingDirectory>      
                 </configuration>
             </plugin>
         </plugins>
