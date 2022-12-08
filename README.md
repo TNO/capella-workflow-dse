@@ -12,7 +12,7 @@ Standalone version can be downloaded from the [release page](https://github.com/
 - [Rotalumis](https://www.es.ele.tue.nl/poosl/Tools/rotalumis/)
 - [Property Values Management Tools (PVMT)](https://www.eclipse.org/capella/addons.html)
 
-Fore more info, see the [tutorial](tutorial.pdf).
+For more info, check the [tutorial](tutorial.pdf) or the Capella Days 2022 presentation ([slides](https://www.slideshare.net/Obeo_corp/capelladays2022-thermofisher-esi-tno-a-method-for-quantitative-evaluation-of-functional-chains-supported-by-a-capella-addon) and [video](https://www.youtube.com/watch?v=BEYfcVq2glo&list=PLfrEYVpSGVLzbLqLJCohL_Cfgu8EzuXtr&index=2))
 
 ## Setup development environment
 To setup a development environment (Windows only):
