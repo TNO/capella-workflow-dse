@@ -18,10 +18,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -33,11 +35,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.sirius.business.api.dialect.DialectManager;
+import org.eclipse.sirius.business.api.session.Session;
 import org.eclipse.sirius.business.api.session.SessionManager;
 import org.polarsys.capella.common.ef.command.AbstractReadWriteCommand;
 import org.polarsys.capella.common.ef.command.ICommand;
 import org.polarsys.capella.common.helpers.EcoreUtil2;
 import org.polarsys.capella.common.helpers.TransactionHelper;
+import org.polarsys.capella.core.data.epbs.ConfigurationItemPkg;
 import org.polarsys.capella.core.data.fa.FunctionalChain;
 
 import com.google.gson.Gson;
@@ -96,10 +100,14 @@ public class RunDSECommand extends AbstractHandler {
 							Util.removeDirectory(dsePath);
 					        Files.createDirectories(dsePath);
 							
-							// pvmt.json
-					        var pvmtFile = Paths.get(dsePath.toString(), "pvmt.json").toFile();
-							var pvmtJson = Exporter.export(representationDescriptor);
-							Util.writeTextToFile(pvmtFile, pvmtJson, StandardCharsets.UTF_8);
+							// dse.json
+					        var gson = Exporter.getGson();
+					        var dseFile = Paths.get(dsePath.toString(), "dse.json").toFile();
+							var pvmtJson = Exporter.exportRepresentationToJsonObject(representationDescriptor);
+							var dseJson = new JsonObject();
+							dseJson.add("configurationItems", gson.toJsonTree(getConfigurationItemNames(session)));
+							dseJson.add("pvmt", pvmtJson);
+							Util.writeTextToFile(dseFile, gson.toJson(dseJson), StandardCharsets.UTF_8);
 							
 							// svg
 							var svgFile = Paths.get(dsePath.toString(), "diagram.svg").toFile();
@@ -189,6 +197,12 @@ public class RunDSECommand extends AbstractHandler {
 		});
 		
 		process.waitFor();
+	}
+	
+	private List<String> getConfigurationItemNames(Session session) {
+		return DialectManager.INSTANCE.getAllRepresentationDescriptors(session).stream()
+				.filter((t) -> t.getTarget() instanceof ConfigurationItemPkg).map((t) -> (ConfigurationItemPkg) t.getTarget())
+				.map((t) -> t.getOwnedConfigurationItems()).flatMap(Collection::stream).map((t) -> t.getName()).collect(Collectors.toList());
 	}
 	
 	private void outputAndRunNet(PetriNet net, Path dsePath, String name, String pvmt) throws URISyntaxException, IOException, CoreException, InterruptedException {

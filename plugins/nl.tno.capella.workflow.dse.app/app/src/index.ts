@@ -68,12 +68,12 @@ const root = process.argv[process.argv.length - 1];
 
 ipcMain.on('get-data', (event) => {
   const svgFile = path.join(root, 'gen', 'dse', 'diagram.svg');
-  const pvmtFile = path.join(root, 'gen', 'dse', 'pvmt.json');
+  const dseFile = path.join(root, 'gen', 'dse', 'dse.json');
   const definitionsFile = path.join(root, 'DSE-definitions.json')
   const svg = fs.readFileSync(svgFile).toString();
-  const pvmt = JSON.parse(fs.readFileSync(pvmtFile).toString());
+  const dse = JSON.parse(fs.readFileSync(dseFile).toString());
   const definitions = fs.existsSync(definitionsFile) ? JSON.parse(fs.readFileSync(definitionsFile).toString()) : [];
-  event.returnValue = {svg, pvmt, definitions};
+  event.returnValue = {svg, pvmt: dse.pvmt, configurationItems: dse.configurationItems, definitions};
 });
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))

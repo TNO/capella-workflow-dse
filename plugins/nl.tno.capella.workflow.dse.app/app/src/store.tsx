@@ -18,6 +18,7 @@ interface State {
     svg: string, 
     pvmt: PVMTExt, 
     runs: RunExt[], 
+    configurationItems: string[],
     definitions: DefinitionEntry[], 
     showRuns: boolean, 
     selectedElement: string | null, 
@@ -36,6 +37,7 @@ function getAllResources(state: State): string[] {
     let resources = state.pvmt.functionalChains.flatMap((fc) => fc.elements.flatMap((e) => e.propertyValueGroups
         .flatMap((pvg) => pvg.propertyValues.filter((pv) => pv.label === 'ResourceID').flatMap((pv: PropertyValueExtString) => pv.value)))) as string[];
     resources.push(...state.definitions.map((d) => d.resource));
+    resources.push(...state.configurationItems.map((c) => `[CI] ${c}`));
     resources = resources.filter((r) => r);
     return Array.from(new Set(resources));
 }
@@ -66,11 +68,12 @@ function updatePropertyValues(state: State) {
     })));
 }
 
-const ipcData: {svg: string, pvmt: PVMT, definitions: DefinitionEntry[]} = ipcRenderer.sendSync('get-data');
+const ipcData: {svg: string, pvmt: PVMT, definitions: DefinitionEntry[], configurationItems: string[]} = ipcRenderer.sendSync('get-data');
 const initialState: State = {
     svg: ipcData.svg, 
     pvmt: pvmtToPVMTExtended(ipcData.pvmt), 
     definitions: ipcData.definitions,
+    configurationItems: ipcData.configurationItems,
     runs: [], showRuns: false, selectedElement: null, highlightedElement: null, allResources: [],
 };
 initialState.allResources = getAllResources(initialState);

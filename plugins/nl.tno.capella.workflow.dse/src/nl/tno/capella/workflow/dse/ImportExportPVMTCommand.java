@@ -78,7 +78,7 @@ public class ImportExportPVMTCommand extends AbstractHandler {
 						    monitor.worked(20);
 							
 						    if (type.equals("export")) {
-							    var json = Exporter.export(res);
+							    var json = Exporter.exportResourceToString(res);
 							    monitor.worked(90);
 							    Util.writeTextToFile(selectedFile[0], json, StandardCharsets.UTF_8);
 				    			Util.showPopupOk(String.format("Successfully exported PVMT values to '%s'", selectedFile[0].getAbsolutePath()));

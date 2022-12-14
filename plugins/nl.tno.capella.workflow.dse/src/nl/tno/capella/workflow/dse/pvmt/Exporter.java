@@ -35,7 +35,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 public class Exporter {
-	public static String export(DRepresentationDescriptor representation) {
+	public static JsonObject exportRepresentationToJsonObject(DRepresentationDescriptor representation) {
 		var json = new JsonObject();
 		var gson = getGson();
 		var functionalChain = (FunctionalChain) representation.getTarget();
@@ -44,14 +44,14 @@ public class Exporter {
 		functionalChains.add(functionalChain);
 		json.addProperty("name", representation.getName());
         json.add("functionalChains", gson.toJsonTree(functionalChains));
-		return getGson().toJson(json);
+        return json;
 	}
 	
-	public static String export(Resource resource) {
+	public static String exportResourceToString(Resource resource) {
 		return getGson().toJson(resource);
 	}
 	
-	private static Gson getGson() {
+	public static Gson getGson() {
 		var builder = new GsonBuilder().serializeNulls().setPrettyPrinting();
 		builder.registerTypeHierarchyAdapter(Resource.class, new JsonSerializer<Resource>() {
 			@Override

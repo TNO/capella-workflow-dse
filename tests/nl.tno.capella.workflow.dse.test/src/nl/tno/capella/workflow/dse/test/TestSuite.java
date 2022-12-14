@@ -78,7 +78,7 @@ public class TestSuite extends BasicTestSuite {
 		@Override
 		public void test() throws Exception {
     		var expected = String.join("\n", Files.readAllLines(Paths.get("expected", "export.json"))).trim();
-    		var actual = Exporter.export(resource);
+    		var actual = Exporter.exportResourceToString(resource);
             assertEquals(expected, actual);
 		}
 	}
