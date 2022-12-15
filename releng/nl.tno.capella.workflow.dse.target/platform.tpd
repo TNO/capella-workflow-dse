@@ -28,3 +28,14 @@ location eclipse "http://download.eclipse.org/releases/2020-06" {
 location pvmt "file:/p2/pvmt" {
     com.thalesgroup.vpd.property.feature.feature.group
 }
+
+location poosl "https://eclipse.github.io/poosl/release/1.0.2" {
+	org.eclipse.poosl.feature.feature.group
+}
+
+location trace4cps "https://download.eclipse.org/trace4cps/v0.1/update-site" {
+	org.eclipse.trace4cps.feature.feature.group
+}
+
+location rotalumis "http://www.es.ele.tue.nl/rotalumis/repository/release" {
+}
