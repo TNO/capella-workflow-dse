@@ -13,9 +13,8 @@ import os, subprocess, glob, zipfile, sys, shutil
 REPOSITORIES = [
     'http://www.es.ele.tue.nl/rotalumis/repository/release',
     'https://download.eclipse.org/trace4cps/v0.1/update-site',
-    'https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.22.0',
+    'http://download.eclipse.org/releases/2020-06',
     'https://eclipse.github.io/poosl/release/1.0.2',
-    'https://download.eclipse.org/tools/orbit/downloads/2020-06',
     'jar:file:/' + os.path.abspath(glob.glob('target/*.zip')[0]).replace('\\', '/') + '!/',
     *['jar:file:/' + os.path.abspath(z).replace('\\', '/') + '!/' for z in glob.glob('p2/*.zip')]
 ]
