@@ -174,7 +174,7 @@ public class Walker {
 							check(getIncomingLinksOfKind(n, ControlNodeKind.ITERATE).size() >= 1, Severity.ERROR, 
 									"ITERATE start without end", n);
 							
-							var message = "ITERATE start defines no 'Repititions', using default of 2";
+							var message = "ITERATE start defines no 'Repetitions', using default of 2";
 							if (!check(nodeProps.containsKey("Repetitions"), Severity.WARNING, message, n)) {
 								nodeProps.put("Repetitions", 2);
 							}
@@ -218,7 +218,7 @@ public class Walker {
 					}
 
 					check(!nodeProps.containsKey("Repetitions") || (startEndLookup.containsKey(n) && n.getKind() == ControlNodeKind.ITERATE), 
-							Severity.WARNING, "Repititions defined on non IRERATE start", n);
+							Severity.WARNING, "Repetitions defined on non ITERATE start", n);
 				}
 				
 				check(!linkProps.containsKey("Weight") || (startEndLookup.containsKey(link.getSource()) && ((ControlNode) link.getSource()).getKind() == ControlNodeKind.OR), 
