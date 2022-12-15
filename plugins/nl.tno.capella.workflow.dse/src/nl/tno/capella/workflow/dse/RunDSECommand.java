@@ -55,9 +55,25 @@ import nl.tno.capella.workflow.dse.walker.Walker;
 
 public class RunDSECommand extends AbstractHandler {	
 	
-	private boolean running = false;
+	private final Object processLock = new Object();
+	private Process process = null;
 	private Thread simulationThread = null;	
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	
+	public RunDSECommand() {
+		// Make sure the DSE tool is stopped when Eclipse is stopped
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				synchronized (processLock) {
+					if (process != null) {
+						process.destroy();
+						process = null;
+					}
+				}
+			}
+		});
+	}
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -75,11 +91,12 @@ public class RunDSECommand extends AbstractHandler {
 				var job = new Job("Running DSE...") {
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
-						if (running) {
-							Util.showPopupError("DSE already running", "");
-							return Status.CANCEL_STATUS;
+						synchronized (processLock) {
+							if (process != null) {
+								Util.showPopupError("DSE already running", "");
+								return Status.CANCEL_STATUS;
+							}
 						}
-						running = true;
 
 						monitor.beginTask("Run DSE", 100);
 						monitor.worked(10);
@@ -122,7 +139,9 @@ public class RunDSECommand extends AbstractHandler {
 							e.printStackTrace();
 						}
 						
-						running = false;
+						synchronized (processLock) {
+							process = null;
+						}
 						return Status.OK_STATUS;
 					}
 				};
@@ -135,7 +154,10 @@ public class RunDSECommand extends AbstractHandler {
 	private void startDSETool(FunctionalChain fc, Path dsePath, IProject prj) throws IOException, InterruptedException {
 		var projectPath = prj.getLocation().toFile().toString();
 		var pb = new ProcessBuilder(DSE.getExecutable(), projectPath);
-		var process = pb.start();
+		
+		synchronized (processLock) {
+			this.process = pb.start();
+		}
 		startOutConsumerThread(process.getErrorStream(), (line) -> {});
 		startOutConsumerThread(process.getInputStream(), (line) -> {
 			if (line.equals("")) return;
@@ -196,7 +218,7 @@ public class RunDSECommand extends AbstractHandler {
 			}
 		});
 		
-		process.waitFor();
+		this.process.waitFor();
 	}
 	
 	private List<String> getConfigurationItemNames(Session session) {
