@@ -42,7 +42,7 @@ function getAllResources(state: State): string[] {
     return Array.from(new Set(resources));
 }
 
-function updatePropertyValues(state: State) {
+function updatePropertyValues(state: State, originalPVMT: PVMT) {
     // Translate Duration property value (PropertyValueNumberExtended/PropertyValueExtendedDurationViaResource)
     state.pvmt.functionalChains.forEach((fc) => fc.elements.filter((e) => e.type === 'FunctionalChainInvolvementFunction').forEach((e) => e.propertyValueGroups.forEach((pvg) => {
         const definitions = state.definitions.filter((d) => d.function === e.label);
@@ -51,9 +51,11 @@ function updatePropertyValues(state: State) {
         if (!resource || !duration) return;
         const index = pvg.propertyValues.indexOf(duration);
         if (definitions.length && resource.value.length) { // PropertyValueExtendedDurationViaResource
+            const defaultValue = Number(originalPVMT.functionalChains.flatMap((fc) => fc.elements).flatMap((e) => e.propertyValueGroups)
+                .flatMap((pvg) => pvg.propertyValues).find((pv) => pv.id === duration.id).value).toFixed(2);
             const value = Object.fromEntries(resource.value.map((r) => {
                 const definition = definitions.find((d) => d.resource === r);
-                return [r, {value: definition ? Number(definition.duration).toFixed(2) : '1.0', default: !definition}];
+                return [r, {value: definition ? Number(definition.duration).toFixed(2) : defaultValue, default: !definition}];
             }));
             if (isPropertyValueExtDurationViaResource(duration)) {
                 pvg.propertyValues[index] = {...duration, value};
@@ -77,7 +79,7 @@ const initialState: State = {
     runs: [], showRuns: false, selectedElement: null, highlightedElement: null, allResources: [],
 };
 initialState.allResources = getAllResources(initialState);
-updatePropertyValues(initialState);
+updatePropertyValues(initialState, ipcData.pvmt);
 
 export const Context = createContext<{state: State, dispatch: React.Dispatch<Action>}>(null);
 
@@ -91,12 +93,12 @@ export const Store = (props: {children: React.ReactNode}) => {
                     pv.value = action.value;
                 }
             }))));
-            updatePropertyValues(state);
+            updatePropertyValues(state, ipcData.pvmt);
             state.allResources = getAllResources(state);
         } else if (action.action === 'set_definitions') {
             state.definitions = action.definitions;
             state.allResources = getAllResources(state);
-            updatePropertyValues(state);
+            updatePropertyValues(state, ipcData.pvmt);
         } else if (action.action === 'add_run') {
             state.runs.push(action.run);
         } else if (action.action === 'clear_runs') {

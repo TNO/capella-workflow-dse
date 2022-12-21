@@ -121,7 +121,7 @@ function PropertyValueDurationViaResource(props: {pv: PropertyValueExtDurationVi
   return (
     <ul style={{paddingLeft: '20px'}}>
       {Object.entries(props.pv.value).map((e, i) => {
-        return <li key={i}>{e[1].value}{e[1].default ? ' (default)' : ''} when resource is "{e[0]}"</li>
+        return <li key={i}>{e[1].value}{e[1].default ? ' (original PVMT value)' : ''} when resource is "{e[0]}"</li>
       })}
     </ul>
   )
