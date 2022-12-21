@@ -120,5 +120,32 @@
             class="nl.tno.capella.workflow.dse.ModelChecker">
       </editingDomainListener>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="nl.tno.capella.workflow.dse.examples.category"
+            name="Capella Workflow DSE"
+            parentCategory="org.eclipse.ui.Examples">
+      </category>
+      <wizard
+            category="org.eclipse.ui.Examples/nl.tno.capella.workflow.dse.examples.category"
+            class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard"
+            icon="icons/project.gif"
+            id="nl.tno.capella.workflow.dse.examples.3dreconstruction"
+            name="3D Reconstruction"
+            project="true">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.emf.common.ui.examples">
+      <example
+            id="nl.tno.capella.workflow.dse.examples"
+            wizardID="nl.tno.capella.workflow.dse.examples.3dreconstruction">
+         <projectDescriptor
+               contentURI="examples/3DReconstruction.zip"
+               name="3D Reconstruction">
+         </projectDescriptor>
+      </example>
+   </extension>
 
 </plugin>

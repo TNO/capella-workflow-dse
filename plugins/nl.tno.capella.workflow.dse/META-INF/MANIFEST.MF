@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  nl.tno.capella.workflow.dse.app,
  nl.tno.capella.workflow.dse.graphviz,
  nl.tno.capella.workflow.dse.python,
- com.google.gson
+ com.google.gson,
+ org.eclipse.emf.common.ui
 Export-Package: nl.tno.capella.workflow.dse.petrinet,
  nl.tno.capella.workflow.dse.pvmt,
  nl.tno.capella.workflow.dse.walker
