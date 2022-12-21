@@ -22,6 +22,7 @@ import TableRow from '@mui/material/TableRow';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WarningIcon from '@mui/icons-material/Warning';
+import ErrorIcon from '@mui/icons-material/Error';
 import SaveIcon from '@mui/icons-material/Save';
 import {DefinitionEntry} from '../types';
 import {clone} from '../utils';
@@ -29,7 +30,7 @@ import {NumberInput, AutcompleteInput} from './Input';
 import { ipcRenderer } from 'electron';
 import Tooltip from '@mui/material/Tooltip';
 
-function Item(props: {index: number, definition: DefinitionEntry, functions: string[], inFc: boolean}) {
+function Item(props: {index: number, definition: DefinitionEntry, functions: string[], inFc: boolean, isDuplicate: boolean}) {
   const {state, dispatch} = useContext(Context);
 
   const handleDelete = () => {
@@ -49,6 +50,7 @@ function Item(props: {index: number, definition: DefinitionEntry, functions: str
       <TableCell>
         <div style={{display: 'flex', alignItems: 'center'}}>
           {!props.inFc && <Tooltip style={{marginRight: '10px'}}arrow title="Function is not included in functional chain"><WarningIcon/></Tooltip>}
+          {props.isDuplicate && <Tooltip style={{marginRight: '10px'}}arrow title="Definition with same function ad resource exists"><ErrorIcon/></Tooltip>}
           {props.inFc && <AutcompleteInput value={props.definition.function} options={props.functions} onChange={(v) => onChange('function', v)}/>}
           {!props.inFc && <div>{props.definition.function}</div>}
         </div>
@@ -105,7 +107,8 @@ export default function DefinitionEditor(props: {open: boolean, onClose: () => v
               <TableBody>
                 {state.definitions.map((d, i) => {
                   const inFc = d.function === '' || functions.includes(d.function);
-                  return [inFc, <Item key={i} index={i} definition={d} functions={functions} inFc={inFc}/>]
+                  const duplicates = state.definitions.filter((dd) => dd.function === d.function && dd.resource == d.resource);
+                  return [inFc, <Item key={i} index={i} definition={d} functions={functions} inFc={inFc} isDuplicate={duplicates.length > 1}/>]
                 }).sort((a, b) => Number(b[0]) - Number(a[0])).map((d) => d[1])}
               </TableBody>
             </Table>

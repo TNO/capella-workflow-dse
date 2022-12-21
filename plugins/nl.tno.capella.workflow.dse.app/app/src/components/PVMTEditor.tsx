@@ -21,6 +21,7 @@ import colors from '../colors';
 import IconButton from '@mui/material/IconButton';
 import TuneIcon from '@mui/icons-material/Tune';
 import AdjustIcon from '@mui/icons-material/Adjust';
+import WarningIcon from '@mui/icons-material/Warning';
 import {NumberInput, AutcompleteInput, TextInput, ListInput} from './Input';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -110,9 +111,15 @@ function PropertyValueStringEnum(props: {pv: PropertyValueExtString | PropertyVa
     childs = pv.value.map((v, i) => <TextInput value={pv.value[i]} onChange={(v) => onChange(i, v)}/>)
   }
 
+  const duplicates = pv.value.filter((item, index) => pv.value.indexOf(item) != index);
   return (
     <div>
       {childs.map((child, i) => <ListInput key={i} child={child} index={i} onAdd={onAdd} onDelete={onDelete}/>)}
+      {duplicates.length !== 0 && 
+        <div style={{display: 'flex', alignItems: 'center', marginTop: '5px'}}>
+          <WarningIcon style={{paddingRight: '10px'}}/>{`Duplicates specified (${duplicates.join(', ')})`}
+        </div>
+      }
     </div>
   );
 }
