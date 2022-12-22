@@ -130,7 +130,7 @@ SPDX-License-Identifier: EPL-2.0
                             <groupId>nl.tno.capella.workflow.dse</groupId>
                             <artifactId>nl.tno.capella.workflow.dse.root</artifactId>
                             <version>0.1.1-SNAPSHOT</version>
-                            <classifier>releng/nl.tno.capella.workflow.dse.target/platform</classifier>
+                            <classifier>releng/nl.tno.capella.workflow.dse.target/platform.local</classifier>
                         </artifact>
                     </target>
                     <environments>
