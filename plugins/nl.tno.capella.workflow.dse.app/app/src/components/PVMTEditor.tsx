@@ -161,7 +161,7 @@ function PropertyValueGroup(props: {pvg: PropertyValueGroupExt}) {
   );
 }
 
-function LoadPVMTDialog(props: {open: boolean, onClose: () => void, title: string, content: string}) {
+function LoadDSESettingsDialog(props: {open: boolean, onClose: () => void, title: string, content: string}) {
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <DialogTitle>{props.title}</DialogTitle>
@@ -212,16 +212,16 @@ export default function PVMTEditor() {
   const propertyValues = state.pvmt.functionalChains.flatMap((fc) => fc.elements
     .flatMap((e) => e.propertyValueGroups.flatMap((pvg) => pvg.propertyValues)));
 
-  const savePVMT = () => {
+  const saveDSESettings = () => {
     const pvmtExport: PVMTExport = propertyValues
       .filter((pv) => !isPropertyValueExtDurationViaResource(pv))
       .map((pv) => pv as PropertyValueExtString | PropertyValueExtNumber | PropertyValueExtEnum);
-    const filename = `PVMT-${state.pvmt.name}.json`;
-    ipcRenderer.invoke('save-file', 'Save PVMT', jsonFileFilters, filename , JSON.stringify(pvmtExport, null, 2));
+    const filename = `DSE-${state.pvmt.name}.json`;
+    ipcRenderer.invoke('save-file', 'Save DSE settings', jsonFileFilters, filename , JSON.stringify(pvmtExport, null, 2));
   }
 
   const loadPVMT = async () => {
-    const data = await ipcRenderer.invoke('load-file', 'Load PVMT', jsonFileFilters);
+    const data = await ipcRenderer.invoke('load-file', 'Load DSE settings', jsonFileFilters);
     if (data) {
       try {
         let warnings = [];
@@ -240,12 +240,12 @@ export default function PVMTEditor() {
           }
         }
         if (warnings.length) {
-          setDialog({open: true, title: 'Warning(s)', content: `Warning(s) while loading PVMT values:\n${warnings.join('\n')}`});
+          setDialog({open: true, title: 'Warning(s)', content: `Warning(s) while loading DSE settings:\n${warnings.join('\n')}`});
         } else {
-          setDialog({open: true, title: 'Success', content: `Successfully imported PVMT values`});
+          setDialog({open: true, title: 'Success', content: `Successfully imported DSE settings`});
         }
       } catch (e) {
-        setDialog({open: true, title: 'Error', content: `Failed to load PVMT values: ${e.message}`});
+        setDialog({open: true, title: 'Error', content: `Failed to load DSE settings: ${e.message}`});
       }
     }
   }
@@ -257,7 +257,7 @@ export default function PVMTEditor() {
   };
   return (
     <div style={{height: '100%', display: 'flex', flexFlow: 'column' }}>
-      <LoadPVMTDialog 
+      <LoadDSESettingsDialog 
         open={dialog.open} 
         title={dialog.title} 
         content={dialog.content} 
@@ -268,8 +268,8 @@ export default function PVMTEditor() {
           <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
             <Typography variant="h6" component="div" sx={{color: '#4a4a4a'}}>PVMT</Typography>
             <div>
-              <Tooltip title="Save PVMT values" arrow><IconButton onClick={savePVMT}><UploadIcon/></IconButton></Tooltip>
-              <Tooltip title="Load PVMT values" arrow><IconButton onClick={loadPVMT}><DownloadIcon/></IconButton></Tooltip>
+              <Tooltip title="Save DSE settings" arrow><IconButton onClick={saveDSESettings}><UploadIcon/></IconButton></Tooltip>
+              <Tooltip title="Load DSE settings" arrow><IconButton onClick={loadPVMT}><DownloadIcon/></IconButton></Tooltip>
             </div>
           </div>
         </Toolbar>
