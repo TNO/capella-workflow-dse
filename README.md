@@ -35,7 +35,8 @@ Below you will find instructions on how to setup a development environment on Wi
 1. Open `nl.tno.capella.workflow.dse.target/platform.target`, click "Set as Active Target Platform". The "Load Target Platform" indicator will now appear in the right bottom, wait till it completes.
 1. The development environment is now ready:
     - To launch the product, right click `nl.tno.capella.workflow.dse/Product.launch` -> "Run As" -> "Product"
-    - To launch the tests, right click `nl.tno.capella.workflow.dse.test/Test.launch` -> "Run As" -> "Test"
+    - To launch the tests, right click `nl.tno.capella.workflow.dse.test/Test.launch` -> "Run As" -> "Test". 
+        - The logs may show an error: `ERROR => PROHIBITED SITUATION : There are many specifics mappings for the purpose <org.polarsys.capella.common.re>`, this can be safely ignored.
     - To launch the app, open a terminal, navigate to the root of the cloned repository and execute:
         ```
         cd plugins/nl.tno.capella.workflow.dse.app/app
