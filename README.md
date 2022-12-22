@@ -20,7 +20,7 @@ Below you will find instructions on how to setup a development environment on Wi
 1. Select "Eclipse IDE for Eclipse Committers", set "Product Version" to "2020-06" and point "Java 1.8+ VM" to the location of Java 14, click "Next" twice.
 1. Change "Installation folder name" to "capella-workflow-dse". If you want to change the installation folder, enable "Show all variables" and change accordingly. Click "Next" and "Finish"
 1. Start Eclipse
-1. Now we are going to clone this repository. For this you need to have [Git](https://git-scm.com/) installed. Open a terminal and navigate to the directory where you want to clone the repository and execute:
+1. Now we are going to clone this repository. For this you need to have [Git](https://git-scm.com/) installed. Open a terminal and navigate to the directory where you want to clone the repository. Clone it high in the filesystem structure to prevent build errors later (e.g. directly under `C:\`). In a terminal execute:
     ```
     git clone https://github.com/TNO/capella-workflow-dse.git
     cd capella-workflow-dse
@@ -32,11 +32,16 @@ Below you will find instructions on how to setup a development environment on Wi
     ```
 1. In Eclipse, press "File" -> "Import..." -> "General" -> "Existing Projects into Workspace", click "Next"
 1. Click "Browse" next to "Select root directory" point it to the root of the cloned repository, click "Finish"
-1. Open `nl.tno.capella.workflow.dse.target/platform.target`, click "Set as Active Target Platform"
+1. Open `nl.tno.capella.workflow.dse.target/platform.target`, click "Set as Active Target Platform". The "Load Target Platform" indicator will now appear in the right bottom, wait till it completes.
 1. The development environment is now ready:
     - To launch the product, right click `nl.tno.capella.workflow.dse/Product.launch` -> "Run As" -> "Product"
     - To launch the tests, right click `nl.tno.capella.workflow.dse.test/Test.launch` -> "Run As" -> "Test"
-    - To launch the app, open a terminal, navigate to `plugins/nl.tno.capella.workflow.dse.app/app` and execute `node\npm start -- -- "../../../tests/nl.tno.capella.workflow.dse.test/model/3D Reconstruction"`
+    - To launch the app, open a terminal, navigate to the root of the cloned repository and execute:
+        ```
+        cd plugins/nl.tno.capella.workflow.dse.app/app
+        set PATH=%cd%\node;%PATH%
+        npm start -- -- "../../../tests/nl.tno.capella.workflow.dse.test/model/3D Reconstruction"
+        ```
         - Before doing this make sure you launched the DSE at least once via the product (`tests/nl.tno.capella.workflow.dse.test/model/3D Reconstruction/gen/dse` has to exist)
 
 ## Creating a new release
