@@ -37,8 +37,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Windows product
-          path: releng/nl.tno.capella.workflow.dse.product/dist/*win32*.zip
+          name: capella-product
+          path: releng/nl.tno.capella.workflow.dse.product/dist/*.zip
           retention-days: 5
       
       # Below only runs on release
