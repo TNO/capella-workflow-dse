@@ -34,6 +34,12 @@ jobs:
           git tag -a "${{ github.event.inputs.version }}" -m "${{ github.event.inputs.version }}"
       - name: Build
         run: .\mvnw clean verify
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows product
+          path: releng/nl.tno.capella.workflow.dse.product/dist/*win32*.zip
+          retention-days: 5
       
       # Below only runs on release
       - name: Set SNAPSHOT version
