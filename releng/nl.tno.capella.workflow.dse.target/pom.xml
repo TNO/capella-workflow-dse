@@ -88,22 +88,7 @@
                             <arguments>
                                 <argument>tpd.py</argument>
                                 <argument>platform.tpd</argument>
-                                <argument>absolute</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>relative</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${project.basedir}/python/python-win32-x64/python.exe</executable>
-                            <arguments>
-                                <argument>tpd.py</argument>
-                                <argument>platform.tpd</argument>
-                                <argument>relative</argument>
+                                <argument>platform.local.tpd</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -144,7 +129,7 @@
                         <configuration>
                             <executionEnvironment>JavaSE-1.8</executionEnvironment>
                             <applicationsArgs>
-                                <args>-application fr.obeo.releng.targetplatform.targetPlatform.converter platform.tpd</args>
+                                <args>-application fr.obeo.releng.targetplatform.targetPlatform.converter platform.local.tpd</args>
                             </applicationsArgs>
                         </configuration>
                         <goals>

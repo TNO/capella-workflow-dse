@@ -10,17 +10,15 @@
 
 import sys, os
 
-file = sys.argv[1]
-with open(file, 'r') as f: 
+in_file = sys.argv[1]
+out_file = sys.argv[2]
+
+with open(in_file, 'r') as f: 
     contents = f.read()
 
 relative = 'file:/p2/'
 absolute = f"file:/" + os.path.abspath('p2').replace('\\', '/') + '/'
+contents = contents.replace(relative, absolute)
 
-if sys.argv[2] == 'absolute':
-    contents = contents.replace(relative, absolute)
-else:
-    contents = contents.replace(absolute, relative)
-
-with open(file, 'w') as f:
+with open(out_file, 'w') as f:
     f.write(contents)

@@ -32,7 +32,7 @@ Below you will find instructions on how to setup a development environment on Wi
     ```
 1. In Eclipse, press "File" -> "Import..." -> "General" -> "Existing Projects into Workspace", click "Next"
 1. Click "Browse" next to "Select root directory" point it to the root of the cloned repository, click "Finish"
-1. Open `nl.tno.capella.workflow.dse.target/platform.target`, click "Set as Active Target Platform". The "Load Target Platform" indicator will now appear in the right bottom, wait till it completes.
+1. Open `nl.tno.capella.workflow.dse.target/platform.local.target`, click "Set as Active Target Platform". The "Load Target Platform" indicator will now appear in the right bottom, wait till it completes.
 1. The development environment is now ready:
     - To launch the product, right click `nl.tno.capella.workflow.dse/Product.launch` -> "Run As" -> "Product"
     - To launch the tests, right click `nl.tno.capella.workflow.dse.test/Test.launch` -> "Run As" -> "Test". 

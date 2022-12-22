@@ -86,7 +86,7 @@ SPDX-License-Identifier: EPL-2.0
                                 <exclude>**/expected/**</exclude>
                                 <exclude>**/capella-product/**</exclude>
                                 <exclude>**/requirements.txt</exclude>
-                                <exclude>**/platform.target</exclude>
+                                <exclude>**/platform.local.target</exclude>
                                 <exclude>**/.polyglot.pom.tycho</exclude>
                                 <exclude>**/dependencies/**</exclude>
                                 <exclude>**/python.spec</exclude>
