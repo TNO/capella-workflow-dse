@@ -39,3 +39,8 @@ location trace4cps "https://download.eclipse.org/trace4cps/v0.1/update-site" {
 
 location rotalumis "http://www.es.ele.tue.nl/rotalumis/repository/release" {
 }
+
+location eclipse-orbit "https://download.eclipse.org/tools/orbit/downloads/2020-06/" {
+	// Prevents "SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder"." error when starting product
+	org.slf4j.nop
+}
