@@ -33,13 +33,18 @@ interface ActionShowRuns {action: 'show_runs', value: boolean}
 interface ActionSetSelectedHighlightedElement {action: 'set_selected_element' | 'set_highlighted_element', id: string}
 export type Action = ActionUpdatePropertyValue | ActionAddRun | ActionShowRuns | ActionSetSelectedHighlightedElement | ActionClearRuns | ActionSetDefinitions;
 
-function getAllResources(state: State): string[] {
-    let resources = state.pvmt.functionalChains.flatMap((fc) => fc.elements.flatMap((e) => e.propertyValueGroups
-        .flatMap((pvg) => pvg.propertyValues.filter((pv) => pv.label === 'ResourceID').flatMap((pv: PropertyValueExtString) => pv.value)))) as string[];
+function setAllResources(state: State, initialPVMTResources: string[]) {
+    let resources = getAllPVMTResources(state.pvmt);
+    resources.push(...initialPVMTResources);
     resources.push(...state.definitions.map((d) => d.resource));
     resources.push(...state.configurationItems.map((c) => `[CI] ${c}`));
     resources = resources.filter((r) => r);
-    return Array.from(new Set(resources));
+    state.allResources = Array.from(new Set(resources));
+}
+
+function getAllPVMTResources(pvmt: PVMTExt): string[] {
+    return pvmt.functionalChains.flatMap((fc) => fc.elements.flatMap((e) => e.propertyValueGroups
+        .flatMap((pvg) => pvg.propertyValues.filter((pv) => pv.label === 'ResourceID').flatMap((pv: PropertyValueExtString) => pv.value)))) as string[];
 }
 
 function updatePropertyValues(state: State, originalPVMT: PVMT) {
@@ -78,7 +83,8 @@ const initialState: State = {
     configurationItems: ipcData.configurationItems,
     runs: [], showRuns: false, selectedElement: null, highlightedElement: null, allResources: [],
 };
-initialState.allResources = getAllResources(initialState);
+const initialPVMTResources = getAllPVMTResources(initialState.pvmt);
+setAllResources(initialState, initialPVMTResources);
 updatePropertyValues(initialState, ipcData.pvmt);
 
 export const Context = createContext<{state: State, dispatch: React.Dispatch<Action>}>(null);
@@ -94,11 +100,11 @@ export const Store = (props: {children: React.ReactNode}) => {
                 }
             }))));
             updatePropertyValues(state, ipcData.pvmt);
-            state.allResources = getAllResources(state);
+            setAllResources(state, initialPVMTResources);
         } else if (action.action === 'set_definitions') {
             state.definitions = action.definitions;
-            state.allResources = getAllResources(state);
             updatePropertyValues(state, ipcData.pvmt);
+            setAllResources(state, initialPVMTResources);
         } else if (action.action === 'add_run') {
             state.runs.push(action.run);
         } else if (action.action === 'clear_runs') {
