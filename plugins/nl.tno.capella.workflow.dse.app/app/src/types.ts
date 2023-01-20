@@ -11,6 +11,8 @@ export interface PropertyValueType {
     type: 'string' | 'int' | 'float' | 'enum';
 };
 
+export type RunMode = 'python' | 'poosl';
+
 export interface RunProgress {
     state: 'error' | 'done' | 'in_progress',
     message: string,
@@ -20,6 +22,7 @@ export interface Run {
     name: string,
     time: number,
     pvmt: PVMT,
+    mode: RunMode,
 }
 
 export interface RunExt extends Run {

@@ -63,7 +63,7 @@ public class ExportCommand extends AbstractHandler {
 							Util.copyResourceDir("poosl", Paths.get(genPath.toString(), "poosl"));
 							Util.copyResourceDir("snakes", Paths.get(genPath.toString(), "snakes"));
 							
-							String bat = String.format("\"%s\" \"%s\"", PythonInterpeter.getExecutablePath(), Paths.get(genPath.toString(), "snakes", "sim.py").toFile());
+							String bat = String.format("\"%s\" \"%s\" --verbose --loop", PythonInterpeter.getExecutablePath(), Paths.get(genPath.toString(), "snakes", "sim.py").toFile());
 							Util.writeTextToFile(Paths.get(genPath.toString(), "snakes", "sim.bat").toFile(), bat, StandardCharsets.UTF_8);
 
 							Util.writeTextToFile(Paths.get(genPath.toString(), "snakes", "net.py").toFile(), net.toSnakes(), StandardCharsets.UTF_8, true);

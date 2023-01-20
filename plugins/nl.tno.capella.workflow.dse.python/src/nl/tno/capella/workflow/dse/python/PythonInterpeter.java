@@ -26,16 +26,25 @@ public class PythonInterpeter {
 	private static String executable;
 	
 	public static String execute(String script, Map<String, String> environment) {
-		loadExecutableIfNotLoaded();
-		
 		try {
 			File tempFile = File.createTempFile("capella-workflow-dse", "py");
 			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
 		    writer.write(script);
 		    writer.close();
 			tempFile.deleteOnExit();
-			
-			ProcessBuilder pb = new ProcessBuilder(executable, tempFile.getAbsolutePath());
+
+			return execute(tempFile, environment);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException("Python execution failed: " + e.getMessage(), e);
+		}
+	}
+	
+	public static String execute(File file, Map<String, String> environment) {
+		loadExecutableIfNotLoaded();
+		
+		try {
+			ProcessBuilder pb = new ProcessBuilder(executable, file.getAbsolutePath());
 			var env = pb.environment();
 			environment.entrySet().forEach(e -> env.put(e.getKey(), e.getValue()));
 			Process process = pb.start();

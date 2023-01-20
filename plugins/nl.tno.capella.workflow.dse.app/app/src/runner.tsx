@@ -7,9 +7,11 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-import {PVMT, isRange, RunProgress, Run, PVMTExt, PropertyValueExt, FunctionalChainExt, ElementExt, PropertyValueGroupExt, PropertyValue, isPropertyValueExtNumber, isPropertyValueExtString, isPropertyValueExtEnum, isPropertyValueExtDurationViaResource, PropertyValueExtDurationViaResource} from './types';
+import {
+    PVMT, isRange, RunProgress, Run, PVMTExt, PropertyValueExt, FunctionalChainExt, ElementExt, PropertyValueGroupExt, PropertyValue, 
+    isPropertyValueExtNumber, isPropertyValueExtString, isPropertyValueExtEnum, isPropertyValueExtDurationViaResource, RunMode} from './types';
 import {Action} from './store';
-import { ipcRenderer } from 'electron';
+import {ipcRenderer} from 'electron';
 import React from 'react';
 import {clone} from './utils';
 
@@ -68,7 +70,7 @@ function addPropertyValue(pvmt: PVMT, fc: FunctionalChainExt, element: ElementEx
     return pvmt;
 }
 
-export async function run(pvmt: PVMTExt, runsPerPVMT: number, dispatch: React.Dispatch<Action>, cb: (progress: RunProgress) => void) {
+export async function run(pvmt: PVMTExt, runsPerPVMT: number, mode: RunMode, dispatch: React.Dispatch<Action>, cb: (progress: RunProgress) => void) {
     pvmt = clone(pvmt);
 
     // Compute possible values
@@ -114,18 +116,19 @@ export async function run(pvmt: PVMTExt, runsPerPVMT: number, dispatch: React.Di
                 }
                 inProgressUpdate();
                 progressUpdateInterval = setInterval(inProgressUpdate, 1000);
-                const run = await ipcRenderer.invoke('run', `${name}-${i + 1}`, pvmt) as Run;
+                const run = await ipcRenderer.invoke('run', `${name}-${i + 1}`, pvmt, mode) as Run;
                 runs.push(run);
                 clearInterval(progressUpdateInterval);
                 counter++;
             }
 
             const averageTime = runs.map(r => r.time).reduce((a, b) => a + b, 0) / runs.length;
-            const run = {pvmt, time: averageTime, name, propertyValueDurationViaResource};
+            const run = {pvmt, time: averageTime, name, propertyValueDurationViaResource, mode};
             dispatch({action: 'add_run', run});
         }
         const elapsed = ((Date.now() - start) / 1000).toFixed(0);
-        cb({state: 'done', message: `Finished, executed ${combos.length} run(s) in ${elapsed}s`});
+        const modeFriendly = {'python': 'Python', 'poosl': 'POOSL'};
+        cb({state: 'done', message: `Finished, executed ${combos.length} run(s) in ${elapsed}s with ${modeFriendly[mode]}`});
     } catch (error) {
         const message = error.message.includes('run-canceled') ? 'Run(s) canceled' : `Run failed, with error '${error.message}'`;
         clearInterval(progressUpdateInterval);

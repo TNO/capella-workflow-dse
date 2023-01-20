@@ -51,9 +51,12 @@ import com.google.gson.JsonObject;
 import nl.tno.capella.workflow.dse.app.DSE;
 import nl.tno.capella.workflow.dse.petrinet.PetriNet;
 import nl.tno.capella.workflow.dse.pvmt.Exporter;
+import nl.tno.capella.workflow.dse.python.PythonInterpeter;
 import nl.tno.capella.workflow.dse.walker.Walker;
 
-public class RunDSECommand extends AbstractHandler {	
+public class RunDSECommand extends AbstractHandler {
+	
+	private enum RunMode { POOSL, PYTHON }
 	
 	private final Object processLock = new Object();
 	private Process process = null;
@@ -182,7 +185,9 @@ public class RunDSECommand extends AbstractHandler {
 					var walker = new Walker(fc, overrideProperties);
 					var net = new PetriNet(walker);
 					try {
-						outputAndRunNet(net, dsePath, action.get("name").toString(), line);
+						var name = action.get("name").toString();
+						var mode = RunMode.valueOf(action.get("mode").toString().toUpperCase());
+						outputAndRunNet(net, dsePath, name, line, mode);
 					} catch (Exception e) {
 						e.printStackTrace();
 						Util.showPopupError("Run DSE failed", e.getMessage());
@@ -227,17 +232,28 @@ public class RunDSECommand extends AbstractHandler {
 				.map((t) -> t.getOwnedConfigurationItems()).flatMap(Collection::stream).map((t) -> t.getName()).collect(Collectors.toList());
 	}
 	
-	private void outputAndRunNet(PetriNet net, Path dsePath, String name, String pvmt) throws URISyntaxException, IOException, CoreException, InterruptedException {
+	private void outputAndRunNet(PetriNet net, Path dsePath, String name, String pvmt, RunMode mode) throws URISyntaxException, IOException, CoreException, InterruptedException {
 		var location = Paths.get(dsePath.toString(), name);
 		Util.removeDirectory(location);
-		var pooslFile = Paths.get(location.toString(), "net.poosl").toFile();
-		var rotalumisFile = Paths.get(location.toString(), "rotalumis.txt").toFile();
+
+		if (mode == RunMode.POOSL) {
+			var pooslFile = Paths.get(location.toString(), "net.poosl").toFile();
+			var rotalumisFile = Paths.get(location.toString(), "rotalumis.txt").toFile();
+			Util.copyResourceDir("poosl", location);
+			Util.writeTextToFile(pooslFile, net.toPOOSL(), StandardCharsets.ISO_8859_1);
+			var output = Util.runRotalumis(pooslFile);
+			Util.writeTextToFile(rotalumisFile, output, StandardCharsets.ISO_8859_1);
+		} else {
+			Util.copyResourceDir("snakes", location);
+			var simFile = Paths.get(location.toString(), "sim.py").toFile();
+			String bat = String.format("\"%s\" \"%s\" --verbose --loop", PythonInterpeter.getExecutablePath(), simFile);
+			Util.writeTextToFile(Paths.get(location.toString(), "sim.bat").toFile(), bat, StandardCharsets.UTF_8);
+			Util.writeTextToFile(Paths.get(location.toString(), "net.py").toFile(), net.toSnakes(), StandardCharsets.UTF_8, true);
+			PythonInterpeter.execute(simFile, new HashMap<String, String>());
+		}
+		
 		var pvmtFile = Paths.get(location.toString(), "pvmt.json").toFile();
-		Util.copyResourceDir("poosl", location);
-		Util.writeTextToFile(pooslFile, net.toPOOSL(), StandardCharsets.ISO_8859_1);
 		Util.writeTextToFile(pvmtFile, gson.toJson(gson.fromJson(pvmt, JsonObject.class)), StandardCharsets.UTF_8);
-		var output = Util.runRotalumis(pooslFile);
-		Util.writeTextToFile(rotalumisFile, output, StandardCharsets.ISO_8859_1);
 	}
 	
 	private static void startOutConsumerThread(InputStream stream, Consumer<String> handleLine) {

@@ -18,9 +18,17 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import ButtonUnstyled from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
 import {run} from '../runner';
 import InputAdornment from '@mui/material/InputAdornment';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -33,6 +41,7 @@ import DefinitionEditor from './DefinitionEditor';
 import { ipcRenderer } from 'electron';
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
+import { RunMode } from '../types';
 
 const RunsTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
@@ -44,6 +53,7 @@ const RunsTextField = styled(TextField)({
 
 const Button = styled(ButtonUnstyled)({
   backgroundColor: 'white',
+  borderColor: 'lightgrey !important',
   color: 'black',
   '&:hover': {
     backgroundColor: 'lightgrey',
@@ -74,11 +84,18 @@ function ClearRunsConfirmDialog(props: {open: boolean, onClose: () => void, onCo
 
 export default function Header() {
   const [running, setRunning] = useState(false);
+  const [runModeOpen, setRunModeOpen] = useState(false);
+  const [runMode, setRunMode] = useState('poosl' as RunMode);
   const [showDefinitionEditor, setShowDefinitionEditor] = useState(false);
   const [runsPerCombo, setRunsPerCombo] = useState(1);
   const [openClearRunsConfirmDialog, setOpenClearRunsConfirmDialog] = useState(false);
   const [snackbar, setSnackbar] = useState(initialSnackbar);
   const {state, dispatch} = useContext(Context);
+
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+  const runModeOptions: {key: RunMode, title: string}[] = [
+    {key: 'poosl', title: 'Run with POOSL'}, {key: 'python', title: 'Run with Python (SNAKES)'}
+  ];
 
   const handleRunsTextFieldChanged = (e: React.ChangeEvent<HTMLInputElement>) => setRunsPerCombo(Math.max(1, Number(e.target.value)));
 
@@ -87,7 +104,7 @@ export default function Header() {
       ipcRenderer.invoke('cancel-run');
     } else {
       setRunning(true);
-      await run(state.pvmt, runsPerCombo, dispatch, (progress) => {
+      await run(state.pvmt, runsPerCombo, runMode, dispatch, (progress) => {
         setSnackbar({open: true, severity: progressSeverityLookup[progress.state], message: progress.message});
       });
       setRunning(false);
@@ -150,11 +167,37 @@ export default function Header() {
               onChange={handleRunsTextFieldChanged}/>
           </Tooltip>
           <div style={{width: '5px'}}/>
-          <Tooltip title={running ? 'Stop simulation' : 'Run simulation'} arrow>
-            <Button onClick={handleRunStopClick} variant="contained" className={running ? "running" : ""}>
-              {running ? <StopIcon/> : <PlayArrowIcon/>}
+          <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+            <Tooltip title={running ? 'Stop simulation' : 'Run simulation'} arrow>
+              <Button onClick={handleRunStopClick} variant="contained" className={running ? "running" : ""}>
+                {running ? <StopIcon/> : <PlayArrowIcon/>}
+              </Button>
+            </Tooltip>
+            <Button size="small" disabled={running} onClick={() => setRunModeOpen(!runModeOpen)}>
+              <ArrowDropDownIcon />
             </Button>
-          </Tooltip>
+          </ButtonGroup>
+          <Popper sx={{zIndex: 1}} open={runModeOpen} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+            {({ TransitionProps, placement }) => (
+              <Grow {...TransitionProps} style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}>
+                <Paper>
+                  <ClickAwayListener onClickAway={() => setRunModeOpen(false)}>
+                    <MenuList autoFocusItem>
+                      {runModeOptions.map((option, index) => (
+                        <MenuItem
+                          key={option.key}
+                          selected={option.key === runMode}
+                          onClick={(event) => { setRunModeOpen(false); setRunMode(option.key)}}
+                        >
+                          {option.title}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </Toolbar>
       </AppBar>
       <Snackbar

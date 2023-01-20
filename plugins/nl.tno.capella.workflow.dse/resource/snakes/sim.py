@@ -8,9 +8,7 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 
-import random, time, os, net
-n = net.n
-initial_marking = n.get_marking()
+import sys, os, random, time, argparse, json
 
 def transition_duration(transition):
     if 'Duration' in transition.props:
@@ -27,15 +25,15 @@ def transition_or_weight(transition):
     return max(weight, 1)
 
 
-def trace_resource(transition):
+def trace_resource(net, transition):
     if 'ResourceID' in transition.props:
         return str(transition.props['ResourceID'])
-    return f"t{n.transition().index(transition)}Unknown"
+    return f"t{net.transition().index(transition)}Unknown"
 
 
-def trace(events):
+def trace(net, events):
     result = "TU SECONDS\nO 0\nT\n"
-    resources = list(set([trace_resource(t) for t in n.transition() if t.name.startswith("FUNCS")]))
+    resources = list(set([trace_resource(net, t) for t in net.transition() if t.name.startswith("FUNCS")]))
     for r in resources:
         result += f"R {resources.index(r)} 1 false;name={r}\n"
 
@@ -45,17 +43,17 @@ def trace(events):
             start = time / 1000
             end = (time + transition_duration(transition)) / 1000
             name = transition.name.split("_", 1)[1]
-            resource = resources.index(trace_resource(transition))
+            resource = resources.index(trace_resource(net, transition))
             result += f"C {cnt} {start} {end} {resource} 1;name={name}\n"
             cnt += 1
     return result
 
-def simulate():
+def simulate(net, initial_marking, verbose):
     clock = 0 # 1 is 1 ms
     events = []
     blocked = {}
     while True:
-        transitions = [t for t in n.transition() if len(t.modes()) > 0]
+        transitions = [t for t in net.transition() if len(t.modes()) > 0]
         if len(transitions) == 0: break
         transitions = [t for t in transitions if not t.name in blocked]
         if len(transitions) == 0:
@@ -84,22 +82,43 @@ def simulate():
             if transition.name.startswith("FUNC"):
                 name = transition.name.split('_', 1)[1]
                 postfix = '->' if transition.name.startswith("FUNCS") else '<-'
-                print(f"{(clock/1000):.3f}s {postfix} {'  ' * transition.branch_depth}{name}")
+                if verbose:
+                    print(f"{(clock/1000):.3f}s {postfix} {'  ' * transition.branch_depth}{name}")
             if transition.name.startswith("FUNCS"):
                 duration = transition_duration(transition)
                 if duration > 0:
                     blocked[f"FUNCE{transition.name[5:]}"] = duration
 
-    n.set_marking(initial_marking)
+    net.set_marking(initial_marking)
     return events
 
-while True:
-    start = time.time()
-    events = simulate()
-    end = time.time()
-    print('-----------------')
-    trace_output = trace(events)
-    trace_file = os.path.join(os.path.dirname(net.__file__), "trace.etf")
-    with open(trace_file, 'w') as f: f.write(trace_output)
-    print(f"Wrote TRACE to '{trace_file}'")
-    input(f"Simulation finished, took {end - start:.3f}s, do you want to run again? (press enter)\n")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--loop', action='store_true')
+    parser.add_argument('--verbose', action='store_true')
+    args = parser.parse_args()
+
+    sys.path.append(os.path.dirname(__file__))
+    import net
+    initial_marking = net.n.get_marking()
+
+    while True:
+        start = time.time()
+        events = simulate(net.n, initial_marking, args.verbose)
+        end = time.time()
+
+        trace_output = trace(net.n, events)
+        trace_file = os.path.join(os.path.dirname(net.__file__), "trace.etf")
+        with open(trace_file, 'w') as f: f.write(trace_output)
+        if args.verbose: print(f"Wrote TRACE to '{trace_file}'")
+
+        result_output = json.dumps({'time': events[-1][0] / 1000})
+        result_file = os.path.join(os.path.dirname(net.__file__), "result.json")
+        with open(result_file, 'w') as f: f.write(result_output)
+        if args.verbose: print(f"Wrote results to '{result_file}'")
+
+        if args.loop:
+            input(f"Simulation finished, took {end - start:.3f}s, do you want to run again? (press enter)\n")
+        else:
+            break
