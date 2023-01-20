@@ -30,7 +30,7 @@ places : Places(numberOfTransitions := 10,
 t13 : Transition(number := 1,
                  prePlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(9) setChange(1)),
-                 duration := 0.0,
+                 duration := 0.000000,
                  postPlaceChanges := new(Array) resize(2)
                      putAt(1, new(PlaceChange) setPlace(11) setChange(1))
                      putAt(2, new(PlaceChange) setPlace(3) setChange(1)),
@@ -43,7 +43,7 @@ t13 : Transition(number := 1,
 t18 : Transition(number := 2,
                  prePlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(13) setChange(1)),
-                 duration := 0.0,
+                 duration := 0.000000,
                  postPlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(10) setChange(1)),
                  resourcenames := new(Array) resize(1) putAt(1, "t18Unknown"),
@@ -55,7 +55,7 @@ t18 : Transition(number := 2,
 t3 : Transition(number := 3,
                  prePlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(1) setChange(1)),
-                 duration := 1.0,
+                 duration := 1.000000,
                  postPlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(6) setChange(1)),
                  resourcenames := new(Array) resize(1) putAt(1, "t3Unknown"),
@@ -67,7 +67,7 @@ t3 : Transition(number := 3,
 t5 : Transition(number := 4,
                  prePlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(11) setChange(2)),
-                 duration := 0.1,
+                 duration := 0.100000,
                  postPlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(7) setChange(1)),
                  resourcenames := new(Array) resize(1) putAt(1, "t5Unknown"),
@@ -79,7 +79,7 @@ t5 : Transition(number := 4,
 t17 : Transition(number := 5,
                  prePlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(10) setChange(1)),
-                 duration := 0.0,
+                 duration := 0.000000,
                  postPlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(9) setChange(1)),
                  resourcenames := new(Array) resize(1) putAt(1, "t17Unknown"),
@@ -92,7 +92,7 @@ t2 : Transition(number := 6,
                  prePlaceChanges := new(Array) resize(2)
                      putAt(1, new(PlaceChange) setPlace(8) setChange(1))
                      putAt(2, new(PlaceChange) setPlace(12) setChange(1)),
-                 duration := 8.0,
+                 duration := 8.000000,
                  postPlaceChanges := new(Array) resize(2)
                      putAt(1, new(PlaceChange) setPlace(8) setChange(1))
                      putAt(2, new(PlaceChange) setPlace(10) setChange(1)),
@@ -105,7 +105,7 @@ t2 : Transition(number := 6,
 t4 : Transition(number := 7,
                  prePlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(5) setChange(1)),
-                 duration := 0.1,
+                 duration := 0.100000,
                  postPlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(2) setChange(1)),
                  resourcenames := new(Array) resize(1) putAt(1, "t4Unknown"),
@@ -117,7 +117,7 @@ t4 : Transition(number := 7,
 t9 : Transition(number := 8,
                  prePlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(2) setChange(1)),
-                 duration := 0.0,
+                 duration := 0.000000,
                  postPlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(4) setChange(2)),
                  resourcenames := new(Array) resize(1) putAt(1, "t9Unknown"),
@@ -130,7 +130,7 @@ t8 : Transition(number := 9,
                  prePlaceChanges := new(Array) resize(2)
                      putAt(1, new(PlaceChange) setPlace(4) setChange(1))
                      putAt(2, new(PlaceChange) setPlace(3) setChange(1)),
-                 duration := 0.0,
+                 duration := 0.000000,
                  postPlaceChanges := new(Array) resize(1)
                      putAt(1, new(PlaceChange) setPlace(1) setChange(1)),
                  resourcenames := new(Array) resize(1) putAt(1, "t8Unknown"),

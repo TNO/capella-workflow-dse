@@ -367,7 +367,7 @@ public class PetriNet {
 			result += String.format("                 prePlaceChanges := new(Array) resize(%d)\n%s,\n", 
 					prePlaceChanges.size(), String.join("\n", prePlaceChanges));
 			if (transition.type != TransitionType.ORC) {
-				result += String.format(Locale.ROOT, "                 duration := %.1f,\n", duration);
+				result += String.format(Locale.ROOT, "                 duration := %f,\n", duration);
 			}
 			result += String.format("                 postPlaceChanges := new(Array) resize(%d)\n%s,\n", 
 					postPlaceChanges.size(), String.join("\n", postPlaceChanges));

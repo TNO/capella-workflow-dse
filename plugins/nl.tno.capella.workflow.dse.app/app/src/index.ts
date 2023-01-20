@@ -137,7 +137,7 @@ ipcMain.handle('run', async (event, name: string, pvmt: PVMT, mode: RunMode): Pr
         const rotalumisTxt = path.join(root, 'gen', 'dse', name, 'rotalumis.txt');
         if (mode === 'poosl' && fs.existsSync(rotalumisTxt)) {
           const content = fs.readFileSync(rotalumisTxt, 'utf8').toString();
-          const time = Number(content.match('Simulated time: +(\\d+)')[1]);
+          const time = Number(content.match('Simulated time: +(.+)')[1]);
           resolve({name, time, pvmt, mode});
           break;
         }
