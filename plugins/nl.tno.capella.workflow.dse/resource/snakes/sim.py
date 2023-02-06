@@ -18,22 +18,12 @@ def transition_duration(transition):
 
 def transition_or_weight(transition):
     weights = [i for i in transition.input_props if 'Weight' in i]
-    if len(weights) > 0:
-        weight = round(weights[0]['Weight'])
-    else:
-        weight = 0
-    return max(weight, 1)
-
-
-def trace_resource(net, transition):
-    if 'ResourceID' in transition.props:
-        return str(transition.props['ResourceID'])
-    return f"t{net.transition().index(transition)}Unknown"
+    return round(weights[0]['Weight']) if len(weights) > 0 else 1
 
 
 def trace(net, events):
     result = "TU SECONDS\nO 0\nT\n"
-    resources = list(set([trace_resource(net, t) for t in net.transition() if t.name.startswith("FUNCS")]))
+    resources = list(set([t.props['ResourceID'] for t in net.transition() if t.name.startswith("FUNCS")]))
     for r in resources:
         result += f"R {resources.index(r)} 1 false;name={r}\n"
 
@@ -43,8 +33,10 @@ def trace(net, events):
             start = time / 1000
             end = (time + transition_duration(transition)) / 1000
             name = transition.name.split("_", 1)[1]
-            resource = resources.index(trace_resource(net, transition))
-            result += f"C {cnt} {start} {end} {resource} 1;name={name}\n"
+            level = transition.props['Level']
+            resource = resources.index(transition.props['ResourceID'])
+            levelNames = ','.join([f"level{i + 1}name={l}"for i, l in enumerate(transition.props['LevelNames'])])
+            result += f"C {cnt} {start} {end} {resource} 1;name={name},level={level},{levelNames}\n"
             cnt += 1
     return result
 

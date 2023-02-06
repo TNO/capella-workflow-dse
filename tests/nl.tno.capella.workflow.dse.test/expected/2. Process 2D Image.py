@@ -60,86 +60,122 @@ n.add_place(p)
 # Transitions
 t = Transition('FUNCS2_2.2. Process 2D Image')
 t.props = {
+	'Duration': 8.000000,
+	'Level': 1,
 	'Description': '',
 	'ResourceID': '1',
-	'Duration': 8.000000,
+	'LevelNames': ['2.2. Process 2D Image'],
 }
 t.branch_depth = 2
 n.add_transition(t)
 t = Transition('FUNCE2_2.2. Process 2D Image')
 t.props = {
+	'Duration': 8.000000,
+	'Level': 1,
 	'Description': '',
 	'ResourceID': '1',
-	'Duration': 8.000000,
+	'LevelNames': ['2.2. Process 2D Image'],
 }
 t.branch_depth = 2
 n.add_transition(t)
 t = Transition('FUNCS3_2.1. Pre-process 2D Image')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 1.000000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't3Unknown',
+	'LevelNames': ['2.1. Pre-process 2D Image'],
 }
 t.branch_depth = 1
 n.add_transition(t)
 t = Transition('FUNCE3_2.1. Pre-process 2D Image')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 1.000000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't3Unknown',
+	'LevelNames': ['2.1. Pre-process 2D Image'],
 }
 t.branch_depth = 1
 n.add_transition(t)
 t = Transition('FUNCS4_2.0 Prepare for 2D image processing')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 0.100000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't4Unknown',
+	'LevelNames': ['2.0 Prepare for 2D image processing'],
 }
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('FUNCE4_2.0 Prepare for 2D image processing')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 0.100000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't4Unknown',
+	'LevelNames': ['2.0 Prepare for 2D image processing'],
 }
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('FUNCS5_2.3. Finalize 2D image processing')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 0.100000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't5Unknown',
+	'LevelNames': ['2.3. Finalize 2D image processing'],
 }
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('FUNCE5_2.3. Finalize 2D image processing')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 0.100000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't5Unknown',
+	'LevelNames': ['2.3. Finalize 2D image processing'],
 }
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('ITS8')
-t.props = {}
+t.props = {
+	'ResourceID': 't8Unknown',
+	'LevelNames': ['x'],
+	'Level': 1,
+}
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('ITG9')
-t.props = {}
+t.props = {
+	'ResourceID': 't9Unknown',
+	'LevelNames': ['x'],
+	'Level': 1,
+}
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('ITE13')
-t.props = {}
+t.props = {
+	'ResourceID': 't13Unknown',
+	'LevelNames': ['x'],
+	'Level': 1,
+}
 t.branch_depth = 1
 n.add_transition(t)
 t = Transition('N17')
-t.props = {}
+t.props = {
+	'ResourceID': 't17Unknown',
+	'LevelNames': ['x'],
+	'Level': 1,
+}
 t.branch_depth = 1
 n.add_transition(t)
 t = Transition('OR18')
-t.props = {}
+t.props = {
+	'ResourceID': 't18Unknown',
+	'LevelNames': ['x'],
+	'Level': 1,
+}
 t.branch_depth = 2
 n.add_transition(t)
 for t in n.transition():
@@ -152,9 +188,12 @@ n.add_input('ITS6', 'ITS8', Value(1))
 n.add_input('ITG10', 'ITG9', Value(1))
 n.add_input('ITE11', 'ITE13', Value(1))
 n.add_input('ITS7', 'FUNCS3_2.1. Pre-process 2D Image', Value(1))
-n.add_input('ITE12', 'FUNCS5_2.3. Finalize 2D image processing', Value(1))
+n.add_input('ITE12', 'FUNCS5_2.3. Finalize 2D image processing', MultiArc([Value(1),Value(1)]))
 n.add_input('ITL16', 'ITS8', Value(1))
 n.add_input('ORS14', 'FUNCS2_2.2. Process 2D Image', Value(1))
+n.transition('FUNCS2_2.2. Process 2D Image').input_props.append({
+	'Weight': 1,
+})
 n.add_input('ORE15', 'N17', Value(1))
 n.add_input('ORS14', 'OR18', Value(1))
 n.transition('OR18').input_props.append({

@@ -9,8 +9,10 @@
  */
 package nl.tno.capella.workflow.dse.petrinet;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Helper {
 	static String propertiesToSnakes(Map<String, Object> properties) {
@@ -27,7 +29,10 @@ public class Helper {
 					result += String.format(Locale.ROOT, "%d", value);
 				} else if (value instanceof Float) {
 					result += String.format(Locale.ROOT, "%f", value);
-				} else {
+				} else if (value instanceof List<?>) {
+					result += String.format("[%s]", ((List<?>) value).stream()
+							.map(s -> String.format("'%s'", s)).collect(Collectors.joining(", ")));
+				} else if (value instanceof String) {
 					result += String.format("'%s'", value);
 				}
 				result += ",\n";

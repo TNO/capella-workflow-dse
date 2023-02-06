@@ -9,8 +9,11 @@
  */
 package nl.tno.capella.workflow.dse.petrinet;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Transition {
 	enum TransitionType { 
@@ -66,10 +69,34 @@ public class Transition {
 		return String.format("%s%d%s", this.type.name(), id, this.name == null ? "" : "_" + this.name);
 	}
 	
-	String toSnakes() {
+	List<String> getLevelNames(int maxLevel) {
+		var level = getLevel();
+		return IntStream.range(0, maxLevel).mapToObj(index -> {
+			var levelName = "x";
+			if (levels != null) {
+				if (levels.size() > index) levelName = levels.get(index);
+				else if (levels.size() == index) levelName = name;
+				else levelName = String.format("level%d", level);
+			}
+			return levelName;
+		}).collect(Collectors.toList());
+	}
+	
+	int getLevel() {
+		return levels != null ? levels.size() + 1 : 1;
+	}
+	
+	String toSnakes(int maxLevel) {
 		var guard = this.guard != null ? String.format(", Expression('%s')", this.guard) : "";
 		var result = String.format("t = Transition('%s'%s)\n", snakesName(), guard);
-		result += String.format("t.props = %s\n", Helper.propertiesToSnakes(properties));
+		var props = this.properties != null ? new HashMap<>(properties) : new HashMap<String, Object>();
+		if (!props.containsKey("ResourceID") || props.get("ResourceID") == null || props.get("ResourceID").toString().strip().equals("")) {
+			props.put("ResourceID", String.format("t%dUnknown", this.id));
+		}
+		props.put("Level", getLevel());
+		props.put("LevelNames", getLevelNames(maxLevel));
+		
+		result += String.format("t.props = %s\n", Helper.propertiesToSnakes(props));
 		result += String.format("t.branch_depth = %d\n", branchDepth);
 		result += "n.add_transition(t)";
 		return result;

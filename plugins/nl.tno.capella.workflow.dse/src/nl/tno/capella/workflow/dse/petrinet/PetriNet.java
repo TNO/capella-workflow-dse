@@ -214,6 +214,10 @@ public class PetriNet {
 		return 1;
 	}
 
+	private int getMaxLevel() {
+		return this.transitions.values().stream().map(t -> t.levels != null ? t.levels.size() : 0).max(Integer::compare).get() + 1;
+	}
+
 	private Transition addTransition(String key, Transition transition) {
 		if (transitions.containsKey(key)) throw new RuntimeException(String.format("Duplicate transition key: '%s'", key));
 		transitions.put(key, transition);
@@ -254,9 +258,9 @@ public class PetriNet {
 				inputs.add(new Input(place, end));
 				transitions.set(idx, start);
 				transitions.add(end);
-				inputs = inputs.stream().map(i -> i.transition == t ? new Input(i.place, start) : i)
+				inputs = inputs.stream().map(i -> i.transition == t ? new Input(i.place, start, i.consumedTokens, i.properties) : i)
 						.collect(Collectors.toList());
-				outputs = outputs.stream().map(o -> o.transition == t ? new Output(o.place, end) : o)
+				outputs = outputs.stream().map(o -> o.transition == t ? new Output(o.place, end, o.producedTokens, o.properties) : o)
 						.collect(Collectors.toList());
 			}
 		}
@@ -271,7 +275,8 @@ public class PetriNet {
 		places.stream().sorted((a, b) -> a.id - b.id).forEach(p -> builder.append(p.toSnakes() + "\n"));
 		
 		builder.append("\n# Transitions\n");
-		transitions.stream().sorted((a, b) -> a.id - b.id).forEach(p -> builder.append(p.toSnakes() + "\n"));
+		var maxLevel = this.getMaxLevel();
+		transitions.stream().sorted((a, b) -> a.id - b.id).forEach(p -> builder.append(p.toSnakes(maxLevel) + "\n"));
 		builder.append("for t in n.transition():\n");
 		builder.append("    t.input_props = []\n");
 		builder.append("    t.output_props = []\n");
@@ -302,7 +307,7 @@ public class PetriNet {
 		var transitions = new  ArrayList<>(this.transitions.values());
 		var inputs = new ArrayList<>(this.inputs);
 		var outputs = new ArrayList<>(this.outputs);
-		var maxLevel = this.transitions.values().stream().map(t -> t.levels != null ? t.levels.size() : 0).max(Integer::compare).get() + 1;
+		var maxLevel = this.getMaxLevel();
 		
 		// POOSL requires a transition for OR (ChoiceStartTransition) while in the net it is a place.
 		// This code inserts the additional transition
@@ -379,21 +384,13 @@ public class PetriNet {
 				}).collect(Collectors.joining(" "));
 				result += String.format("                 weights := new(Array) resize(%d) %s)\n\n", transitionOutputs.size(), weights);
 			} else {
-				var level = transition.levels != null ? transition.levels.size() + 1 : 1;
-				var levelNames = IntStream.range(0, maxLevel).mapToObj(index -> {
-					var levelName = "x";
-					if (transition.levels != null) {
-						if (transition.levels.size() > index) levelName = transition.levels.get(index);
-						else if (transition.levels.size() == index) levelName = transition.name;
-						else levelName = String.format("level%d", level);
-					}
-					return String.format("putAt(%d,\"%s\")", index + 1, levelName);
-				}).collect(Collectors.joining(" "));
-				
+				var levelNames = transition.getLevelNames(maxLevel);
+				var levelNamesStr = IntStream.range(0, levelNames.size()).mapToObj(i -> String.format("putAt(%d,\"%s\")", i + 1, levelNames.get(i)))
+						.collect(Collectors.joining(" "));
 				result += String.format("                 resourcenames := %s,\n", resourceNames);
 				result += String.format("                 name := \"%s\",\n", transition.pooslName());
-				result += String.format("                 level := %d,\n", level);
-				result += String.format("                 levelnames := new(Array) resize(%d) %s,\n", maxLevel, levelNames);
+				result += String.format("                 level := %d,\n", transition.getLevel());
+				result += String.format("                 levelnames := new(Array) resize(%d) %s,\n", maxLevel, levelNamesStr);
 				result += String.format("                 logging := %s)\n\n", logging);
 			}
 		}

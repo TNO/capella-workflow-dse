@@ -60,74 +60,104 @@ n.add_place(p)
 # Transitions
 t = Transition('FUNCS2_1.2. Acquire 2D Image')
 t.props = {
+	'Duration': 5.000000,
+	'Level': 1,
 	'Description': '',
 	'ResourceID': '42',
-	'Duration': 5.000000,
+	'LevelNames': ['1.2. Acquire 2D Image'],
 }
 t.branch_depth = 1
 n.add_transition(t)
 t = Transition('FUNCE2_1.2. Acquire 2D Image')
 t.props = {
+	'Duration': 5.000000,
+	'Level': 1,
 	'Description': '',
 	'ResourceID': '42',
-	'Duration': 5.000000,
+	'LevelNames': ['1.2. Acquire 2D Image'],
 }
 t.branch_depth = 1
 n.add_transition(t)
 t = Transition('FUNCS3_1.1. Move to Next Position')
 t.props = {
 	'Duration': 1.000000,
+	'Level': 1,
+	'ResourceID': 't3Unknown',
+	'LevelNames': ['1.1. Move to Next Position'],
 }
 t.branch_depth = 1
 n.add_transition(t)
 t = Transition('FUNCE3_1.1. Move to Next Position')
 t.props = {
 	'Duration': 1.000000,
+	'Level': 1,
+	'ResourceID': 't3Unknown',
+	'LevelNames': ['1.1. Move to Next Position'],
 }
 t.branch_depth = 1
 n.add_transition(t)
 t = Transition('FUNCS4_1.0 Prepare for 2D acquisitions')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 0.100000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't4Unknown',
+	'LevelNames': ['1.0 Prepare for 2D acquisitions'],
 }
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('FUNCE4_1.0 Prepare for 2D acquisitions')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 0.100000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't4Unknown',
+	'LevelNames': ['1.0 Prepare for 2D acquisitions'],
 }
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('FUNCS5_1.3 Finalize 2D acquisitions')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 0.100000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't5Unknown',
+	'LevelNames': ['1.3 Finalize 2D acquisitions'],
 }
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('FUNCE5_1.3 Finalize 2D acquisitions')
 t.props = {
-	'Description': '',
-	'ResourceID': '',
 	'Duration': 0.100000,
+	'Level': 1,
+	'Description': '',
+	'ResourceID': 't5Unknown',
+	'LevelNames': ['1.3 Finalize 2D acquisitions'],
 }
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('ITS8')
-t.props = {}
+t.props = {
+	'ResourceID': 't8Unknown',
+	'LevelNames': ['x'],
+	'Level': 1,
+}
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('ITG9')
-t.props = {}
+t.props = {
+	'ResourceID': 't9Unknown',
+	'LevelNames': ['x'],
+	'Level': 1,
+}
 t.branch_depth = 0
 n.add_transition(t)
 t = Transition('ITE13')
-t.props = {}
+t.props = {
+	'ResourceID': 't13Unknown',
+	'LevelNames': ['x'],
+	'Level': 1,
+}
 t.branch_depth = 1
 n.add_transition(t)
 for t in n.transition():
@@ -140,7 +170,7 @@ n.add_input('ITS6', 'ITS8', Value(1))
 n.add_input('ITG10', 'ITG9', Value(1))
 n.add_input('ITE11', 'ITE13', Value(1))
 n.add_input('ITS7', 'FUNCS3_1.1. Move to Next Position', Value(1))
-n.add_input('ITE12', 'FUNCS5_1.3 Finalize 2D acquisitions', Value(1))
+n.add_input('ITE12', 'FUNCS5_1.3 Finalize 2D acquisitions', MultiArc([Value(1),Value(1),Value(1),Value(1),Value(1),Value(1),Value(1),Value(1),Value(1),Value(1)]))
 n.add_input('ITL14', 'ITS8', Value(1))
 n.add_input('N15', 'FUNCS2_1.2. Acquire 2D Image', Value(1))
 n.add_input('START16', 'FUNCS4_1.0 Prepare for 2D acquisitions', Value(1))
