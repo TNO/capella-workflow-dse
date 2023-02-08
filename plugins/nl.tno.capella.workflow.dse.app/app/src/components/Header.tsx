@@ -104,7 +104,7 @@ export default function Header() {
       ipcRenderer.invoke('cancel-run');
     } else {
       setRunning(true);
-      await run(state.pvmt, runsPerCombo, runMode, dispatch, (progress) => {
+        await run(state.pvmt, state.definitions, runsPerCombo, runMode, dispatch, (progress) => {
         setSnackbar({open: true, severity: progressSeverityLookup[progress.state], message: progress.message});
       });
       setRunning(false);

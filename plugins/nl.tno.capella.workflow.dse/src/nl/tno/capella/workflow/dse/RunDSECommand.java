@@ -10,6 +10,7 @@
 package nl.tno.capella.workflow.dse;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,9 +21,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -187,7 +190,8 @@ public class RunDSECommand extends AbstractHandler {
 					try {
 						var name = action.get("name").toString();
 						var mode = RunMode.valueOf(action.get("mode").toString().toUpperCase());
-						outputAndRunNet(net, dsePath, name, line, mode);
+						var costs = (List<Map<String, String>>) action.get("costs");
+						outputAndRunNet(net, dsePath, name, line, mode, costs);
 					} catch (Exception e) {
 						e.printStackTrace();
 						Util.showPopupError("Run DSE failed", e.getMessage());
@@ -232,10 +236,12 @@ public class RunDSECommand extends AbstractHandler {
 				.map((t) -> t.getOwnedConfigurationItems()).flatMap(Collection::stream).map((t) -> t.getName()).collect(Collectors.toList());
 	}
 	
-	private void outputAndRunNet(PetriNet net, Path dsePath, String name, String pvmt, RunMode mode) throws URISyntaxException, IOException, CoreException, InterruptedException {
+	private void outputAndRunNet(PetriNet net, Path dsePath, String name, String pvmt, RunMode mode, List<Map<String, String>> costs) throws URISyntaxException, IOException, CoreException, InterruptedException {
 		var location = Paths.get(dsePath.toString(), name);
+		var resultFile = Paths.get(location.toString(), "result.json").toFile();
 		Util.removeDirectory(location);
-
+		
+		Float time = null;
 		if (mode == RunMode.POOSL) {
 			var pooslFile = Paths.get(location.toString(), "net.poosl").toFile();
 			var rotalumisFile = Paths.get(location.toString(), "rotalumis.txt").toFile();
@@ -243,6 +249,10 @@ public class RunDSECommand extends AbstractHandler {
 			Util.writeTextToFile(pooslFile, net.toPOOSL(), StandardCharsets.ISO_8859_1);
 			var output = Util.runRotalumis(pooslFile);
 			Util.writeTextToFile(rotalumisFile, output, StandardCharsets.ISO_8859_1);
+			var timePattern = Pattern.compile("Simulated time: +(.+)");
+			var timeMatcher = timePattern.matcher(output);
+			timeMatcher.find();
+			time = Float.parseFloat(timeMatcher.group(1));
 		} else {
 			Util.copyResourceDir("snakes", location);
 			var simFile = Paths.get(location.toString(), "sim.py").toFile();
@@ -250,10 +260,54 @@ public class RunDSECommand extends AbstractHandler {
 			Util.writeTextToFile(Paths.get(location.toString(), "sim.bat").toFile(), bat, StandardCharsets.UTF_8);
 			Util.writeTextToFile(Paths.get(location.toString(), "net.py").toFile(), net.toSnakes(), StandardCharsets.UTF_8, true);
 			PythonInterpeter.execute(simFile, new HashMap<String, String>());
+			time = Float.parseFloat(gson.fromJson(Util.readTextFromFile(resultFile), HashMap.class).get("time").toString());
 		}
 		
 		var pvmtFile = Paths.get(location.toString(), "pvmt.json").toFile();
 		Util.writeTextToFile(pvmtFile, gson.toJson(gson.fromJson(pvmt, JsonObject.class)), StandardCharsets.UTF_8);
+		
+		// Write result.json
+		var traceFile = Paths.get(location.toString(), "trace.etf").toFile();
+		var result = new JsonObject();
+		result.addProperty("time", time);
+		addCosts(costs, traceFile, result);
+		Util.writeTextToFile(resultFile, gson.toJson(result), StandardCharsets.UTF_8);
+	}
+	
+	private void addCosts(List<Map<String, String>> costs, File traceFile, JsonObject obj) throws IOException {
+		var resourceLookup = new HashMap<String, String>();
+		var usedResources = new HashSet<String>();
+		var resourcePattern = Pattern.compile("R (\\w+).*name=(\\w+)");
+		var actionPattern = Pattern.compile("C \\w+ .+ .+ (.+) .+;.*");
+		for (var line : Util.readTextFromFile(traceFile).split(System.lineSeparator())) {
+			var resourceMatcher = resourcePattern.matcher(line);
+			var actionMatcher = actionPattern.matcher(line);
+			if (resourceMatcher.matches()) {
+				resourceLookup.put(resourceMatcher.group(1), resourceMatcher.group(2));
+			} else if (actionMatcher.matches()) {
+				usedResources.add(actionMatcher.group(1));
+			}
+		}
+		
+		var totalCost = 0;
+		var totalCostUsed = 0;
+		for (var resourceID : resourceLookup.keySet()) {
+			var resourceName = resourceLookup.get(resourceID);
+			var cost = costs.stream().filter(c -> c.get("resource").equals(resourceName)).findFirst();
+			if (cost.isPresent()) {
+				try {
+					var costParsed = Float.parseFloat((String) cost.get().get("cost"));
+					totalCost += costParsed;
+					var isUsed = usedResources.stream().filter(u -> u.equals(resourceID)).findFirst().isPresent();
+					if (isUsed) {
+						totalCostUsed += costParsed;
+					}
+ 				} catch (Exception e) {}
+			}
+		}
+		
+		obj.addProperty("totalCost", totalCost);
+		obj.addProperty("totalCostUsed", totalCostUsed);
 	}
 	
 	private static void startOutConsumerThread(InputStream stream, Consumer<String> handleLine) {
