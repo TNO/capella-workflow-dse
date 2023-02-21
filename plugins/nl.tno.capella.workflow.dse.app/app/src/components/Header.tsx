@@ -85,7 +85,7 @@ function ClearRunsConfirmDialog(props: {open: boolean, onClose: () => void, onCo
 export default function Header() {
   const [running, setRunning] = useState(false);
   const [runModeOpen, setRunModeOpen] = useState(false);
-  const [runMode, setRunMode] = useState('poosl' as RunMode);
+  const [runMode, setRunMode] = useState('python' as RunMode);
   const [showDefinitionEditor, setShowDefinitionEditor] = useState(false);
   const [runsPerCombo, setRunsPerCombo] = useState(1);
   const [openClearRunsConfirmDialog, setOpenClearRunsConfirmDialog] = useState(false);
@@ -94,7 +94,7 @@ export default function Header() {
 
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const runModeOptions: {key: RunMode, title: string}[] = [
-    {key: 'poosl', title: 'Run with POOSL'}, {key: 'python', title: 'Run with Python (SNAKES)'}
+    {key: 'python', title: 'Run with Python (SNAKES)'}, {key: 'poosl', title: 'Run with POOSL'}, 
   ];
 
   const handleRunsTextFieldChanged = (e: React.ChangeEvent<HTMLInputElement>) => setRunsPerCombo(Math.max(1, Number(e.target.value)));
