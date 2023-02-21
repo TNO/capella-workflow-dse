@@ -192,6 +192,8 @@ public class Walker {
 									var props = properties.get(l);
 									if (!check(props.containsKey("Weight"), Severity.WARNING, "OR link defines no 'Weight', using default of 1", l)) {
 										props.put("Weight", 1);
+									} else {
+										check((float)props.get("Weight") >= 0, Severity.ERROR, "OR link 'Weight' should at least be 0", l);
 									}
 								}
 							}
@@ -234,6 +236,12 @@ public class Walker {
 			for (var entry : startEndLookup.entrySet()) {
 				if (check(entry.getValue() != null, Severity.ERROR, "Control node has no end", entry.getKey())) {
 					check(entry.getKey().getKind() == entry.getValue().getKind(), Severity.ERROR, "Control node kinds do not match", entry.getKey());
+				}
+				
+				if (entry.getKey().getKind() == ControlNodeKind.OR) {
+					var weightSum = getOutgoingLinks(entry.getKey()).stream().map(l -> (float)getProperties(l).get("Weight"))
+							.collect(Collectors.summingDouble(Float::floatValue));
+					check(weightSum > 0, Severity.ERROR, "Sum of 'Weight' of outgoing links should be greater than 0", entry.getKey());
 				}
 			}
 		}
