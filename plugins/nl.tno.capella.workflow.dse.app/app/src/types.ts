@@ -23,6 +23,8 @@ export interface Run {
     time: number,
     pvmt: PVMT,
     mode: RunMode,
+    totalCost: number,
+    totalCostUsed: number,
 }
 
 export interface RunExt extends Run {
@@ -35,10 +37,20 @@ export interface Range {
     step: string,
 }
 
-export interface DefinitionEntry {
+export interface Definitions {
+    costs: CostEntry[],
+    durations: DurationEntry[],
+}
+
+export interface DurationEntry {
     function: string,
     duration: string,
     resource: string,
+}
+
+export interface CostEntry {
+    resource: string,
+    cost: string,
 }
 
 export interface PropertyValueNumber {

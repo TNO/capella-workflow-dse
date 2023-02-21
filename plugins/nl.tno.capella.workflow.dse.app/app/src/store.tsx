@@ -9,17 +9,17 @@
  */
 import React, {useReducer, createContext} from 'react';
 import {
-    PVMTExt, RunExt, Range, PropertyValueExt, PropertyValueExtString, PropertyValueExtNumber, PVMT, DefinitionEntry,
-    PropertyValueExtDurationViaResource, isPropertyValueExtDurationViaResource} from './types';
+    PVMTExt, RunExt, Range, PropertyValueExt, PropertyValueExtString, PropertyValueExtNumber, PVMT,
+    PropertyValueExtDurationViaResource, isPropertyValueExtDurationViaResource, Definitions} from './types';
 import { ipcRenderer } from 'electron';
 import { pvmtToPVMTExtended } from './utils';
 
-interface State {
+export interface State {
     svg: string, 
     pvmt: PVMTExt, 
     runs: RunExt[], 
     configurationItems: string[],
-    definitions: DefinitionEntry[], 
+    definitions: Definitions, 
     showRuns: boolean, 
     selectedElement: string | null, 
     highlightedElement: string | null,
@@ -28,7 +28,7 @@ interface State {
 interface ActionUpdatePropertyValue {action: 'update_property_value', pv: PropertyValueExt, value: string | Range | string[]}
 interface ActionAddRun {action: 'add_run', run: RunExt}
 interface ActionClearRuns {action: 'clear_runs'}
-interface ActionSetDefinitions {action: 'set_definitions', definitions: DefinitionEntry[]}
+interface ActionSetDefinitions {action: 'set_definitions', definitions: Definitions}
 interface ActionShowRuns {action: 'show_runs', value: boolean}
 interface ActionSetSelectedHighlightedElement {action: 'set_selected_element' | 'set_highlighted_element', id: string}
 export type Action = ActionUpdatePropertyValue | ActionAddRun | ActionShowRuns | ActionSetSelectedHighlightedElement | ActionClearRuns | ActionSetDefinitions;
@@ -36,13 +36,14 @@ export type Action = ActionUpdatePropertyValue | ActionAddRun | ActionShowRuns |
 function setAllResources(state: State, initialPVMTResources: string[]) {
     let resources = getAllPVMTResources(state.pvmt);
     resources.push(...initialPVMTResources);
-    resources.push(...state.definitions.map((d) => d.resource));
+    resources.push(...state.definitions.durations.map((d) => d.resource));
+    resources.push(...state.definitions.costs.map((d) => d.resource));
     resources.push(...state.configurationItems.map((c) => `[CI] ${c}`));
     resources = resources.filter((r) => r);
     state.allResources = Array.from(new Set(resources));
 }
 
-function getAllPVMTResources(pvmt: PVMTExt): string[] {
+export function getAllPVMTResources(pvmt: PVMTExt): string[] {
     return pvmt.functionalChains.flatMap((fc) => fc.elements.flatMap((e) => e.propertyValueGroups
         .flatMap((pvg) => pvg.propertyValues.filter((pv) => pv.label === 'ResourceID').flatMap((pv: PropertyValueExtString) => pv.value)))) as string[];
 }
@@ -50,17 +51,17 @@ function getAllPVMTResources(pvmt: PVMTExt): string[] {
 function updatePropertyValues(state: State, originalPVMT: PVMT) {
     // Translate Duration property value (PropertyValueNumberExtended/PropertyValueExtendedDurationViaResource)
     state.pvmt.functionalChains.forEach((fc) => fc.elements.filter((e) => e.type === 'FunctionalChainInvolvementFunction').forEach((e) => e.propertyValueGroups.forEach((pvg) => {
-        const definitions = state.definitions.filter((d) => d.function === e.label);
+        const durations = state.definitions.durations.filter((d) => d.function === e.label);
         const resource = pvg.propertyValues.find((pv) => pv.label === 'ResourceID') as PropertyValueExtString;
         const duration = pvg.propertyValues.find((pv) => pv.label === 'Duration') as (PropertyValueExtNumber | PropertyValueExtDurationViaResource);
         if (!resource || !duration) return;
         const index = pvg.propertyValues.indexOf(duration);
-        if (definitions.length && resource.value.length) { // PropertyValueExtendedDurationViaResource
+        if (durations.length && resource.value.length) { // PropertyValueExtendedDurationViaResource
             const defaultValue = Number(originalPVMT.functionalChains.flatMap((fc) => fc.elements).flatMap((e) => e.propertyValueGroups)
                 .flatMap((pvg) => pvg.propertyValues).find((pv) => pv.id === duration.id).value).toFixed(2);
             const value = Object.fromEntries(resource.value.map((r) => {
-                const definition = definitions.find((d) => d.resource === r);
-                return [r, {value: definition ? Number(definition.duration).toFixed(2) : defaultValue, default: !definition}];
+                const duration = durations.find((d) => d.resource === r);
+                return [r, {value: duration ? Number(duration.duration).toFixed(2) : defaultValue, default: !duration}];
             }));
             if (isPropertyValueExtDurationViaResource(duration)) {
                 pvg.propertyValues[index] = {...duration, value};
@@ -75,7 +76,7 @@ function updatePropertyValues(state: State, originalPVMT: PVMT) {
     })));
 }
 
-const ipcData: {svg: string, pvmt: PVMT, definitions: DefinitionEntry[], configurationItems: string[]} = ipcRenderer.sendSync('get-data');
+const ipcData: {svg: string, pvmt: PVMT, definitions: Definitions, configurationItems: string[]} = ipcRenderer.sendSync('get-data');
 const initialState: State = {
     svg: ipcData.svg, 
     pvmt: pvmtToPVMTExtended(ipcData.pvmt), 

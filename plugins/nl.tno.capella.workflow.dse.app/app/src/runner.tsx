@@ -9,7 +9,7 @@
  */
 import {
     PVMT, isRange, RunProgress, Run, PVMTExt, PropertyValueExt, FunctionalChainExt, ElementExt, PropertyValueGroupExt, PropertyValue, 
-    isPropertyValueExtNumber, isPropertyValueExtString, isPropertyValueExtEnum, isPropertyValueExtDurationViaResource, RunMode} from './types';
+    isPropertyValueExtNumber, isPropertyValueExtString, isPropertyValueExtEnum, isPropertyValueExtDurationViaResource, RunMode, Definitions} from './types';
 import {Action} from './store';
 import {ipcRenderer} from 'electron';
 import React from 'react';
@@ -70,7 +70,7 @@ function addPropertyValue(pvmt: PVMT, fc: FunctionalChainExt, element: ElementEx
     return pvmt;
 }
 
-export async function run(pvmt: PVMTExt, runsPerPVMT: number, mode: RunMode, dispatch: React.Dispatch<Action>, cb: (progress: RunProgress) => void) {
+export async function run(pvmt: PVMTExt, definitions: Definitions, runsPerPVMT: number, mode: RunMode, dispatch: React.Dispatch<Action>, cb: (progress: RunProgress) => void) {
     pvmt = clone(pvmt);
 
     // Compute possible values
@@ -116,14 +116,16 @@ export async function run(pvmt: PVMTExt, runsPerPVMT: number, mode: RunMode, dis
                 }
                 inProgressUpdate();
                 progressUpdateInterval = setInterval(inProgressUpdate, 1000);
-                const run = await ipcRenderer.invoke('run', `${name}-${i + 1}`, pvmt, mode) as Run;
+                const run = await ipcRenderer.invoke('run', `${name}-${i + 1}`, pvmt, mode, definitions.costs) as Run;
                 runs.push(run);
                 clearInterval(progressUpdateInterval);
                 counter++;
             }
 
             const averageTime = runs.map(r => r.time).reduce((a, b) => a + b, 0) / runs.length;
-            const run = {pvmt, time: averageTime, name, propertyValueDurationViaResource, mode};
+            const averageTotalCost = runs.map(r => r.totalCost).reduce((a, b) => a + b, 0) / runs.length;
+            const averageTotalCostUsed = runs.map(r => r.totalCostUsed).reduce((a, b) => a + b, 0) / runs.length;
+            const run = {pvmt, time: averageTime, totalCost: averageTotalCost, totalCostUsed: averageTotalCostUsed, name, propertyValueDurationViaResource, mode};
             dispatch({action: 'add_run', run});
         }
         const elapsed = ((Date.now() - start) / 1000).toFixed(0);
