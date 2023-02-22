@@ -239,7 +239,7 @@ public class Walker {
 				}
 				
 				if (entry.getKey().getKind() == ControlNodeKind.OR) {
-					var weightSum = getOutgoingLinks(entry.getKey()).stream().map(l -> (float)getProperties(l).get("Weight"))
+					var weightSum = getOutgoingLinks(entry.getKey()).stream().map(l -> Float.parseFloat(properties.get(l).get("Weight").toString()))
 							.collect(Collectors.summingDouble(Float::floatValue));
 					check(weightSum > 0, Severity.ERROR, "Sum of 'Weight' of outgoing links should be greater than 0", entry.getKey());
 				}
