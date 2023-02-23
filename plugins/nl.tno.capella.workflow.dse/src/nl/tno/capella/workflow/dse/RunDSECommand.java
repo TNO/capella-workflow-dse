@@ -277,7 +277,7 @@ public class RunDSECommand extends AbstractHandler {
 	private void addCosts(List<Map<String, String>> costs, File traceFile, JsonObject obj) throws IOException {
 		var resourceLookup = new HashMap<String, String>();
 		var usedResources = new HashSet<String>();
-		var resourcePattern = Pattern.compile("R (\\w+).*name=(\\w+)");
+		var resourcePattern = Pattern.compile("R (\\w+).*name=(.+)");
 		var actionPattern = Pattern.compile("C \\w+ .+ .+ (.+) .+;.*");
 		for (var line : Util.readTextFromFile(traceFile).split(System.lineSeparator())) {
 			var resourceMatcher = resourcePattern.matcher(line);
