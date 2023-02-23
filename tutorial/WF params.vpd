@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ASCII"?>
+<vpd:VpdRoot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vpd="http://www.thalesgroup.com/vpd" id="_OhgT8D8wEe2ce4-woIuYyg" name="WF params" version="1.0.0">
+  <groups id="_ALqnALTcEeyfXKTKpbpHCg" name="Function params">
+    <scope>
+      <rules xsi:type="vpd:EClassRule">
+        <classifier href="http://www.polarsys.org/capella/core/fa/5.0.0#//FunctionalChainInvolvementFunction"/>
+      </rules>
+      <architectures>LOGICAL</architectures>
+      <architectures>SYSTEM</architectures>
+      <architectures>PHYSICAL</architectures>
+    </scope>
+    <properties xsi:type="vpd:FloatProperty" id="_uHzjgLTcEeyfXKTKpbpHCg" name="Duration" unit="s">
+      <range id="_WZ2WgESREe231ISneIJgsA" max="1.0E30"/>
+    </properties>
+    <properties xsi:type="vpd:StringProperty" id="_NdyQIEPxEe2GQ5WzHhkECQ" name="ResourceID" defaultValue=""/>
+    <properties xsi:type="vpd:StringProperty" id="_fqFLQMRqEeyWE58ttvbC2A" name="Description"/>
+  </groups>
+  <groups id="_4XeAALTdEeyfXKTKpbpHCg" name="Sequence Link params">
+    <scope>
+      <rules xsi:type="vpd:EClassRule">
+        <classifier href="http://www.polarsys.org/capella/core/fa/5.0.0#//SequenceLink"/>
+      </rules>
+      <architectures>SYSTEM</architectures>
+      <architectures>LOGICAL</architectures>
+      <architectures>PHYSICAL</architectures>
+    </scope>
+    <properties xsi:type="vpd:FloatProperty" id="_Ke1doEPvEe2GQ5WzHhkECQ" name="Weight">
+      <range id="_WZ9EMESREe231ISneIJgsA" max="100.0"/>
+    </properties>
+  </groups>
+  <groups id="_3tUXQMRpEeyWE58ttvbC2A" name="Control Node params">
+    <scope>
+      <rules xsi:type="vpd:EClassRule">
+        <classifier href="http://www.polarsys.org/capella/core/fa/5.0.0#//ControlNode"/>
+      </rules>
+      <architectures>SYSTEM</architectures>
+      <architectures>PHYSICAL</architectures>
+      <architectures>LOGICAL</architectures>
+    </scope>
+    <properties xsi:type="vpd:IntegerProperty" id="__oF1cMRpEeyWE58ttvbC2A" name="Repetitions" defaultValue="1">
+      <range id="_WZ_gcESREe231ISneIJgsA" min="1" max="1000000000"/>
+    </properties>
+    <properties xsi:type="vpd:StringProperty" id="_IiN30MRqEeyWE58ttvbC2A" name="Description"/>
+  </groups>
+</vpd:VpdRoot>

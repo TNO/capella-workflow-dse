@@ -1,6 +1,6 @@
 # Capella Workflow 
 
-A Capella addon for doing design space exploration (DSE) on Capella workflow models. To try it out, download a Capella release with this addon included from the [release page](https://github.com/TNO/capella-workflow-dse/releases) (Windows only). For more information on how to install and use see the [tutorial](tutorial.pdf). This addon was presented on the Capella Days 2022 ([slides](https://www.slideshare.net/Obeo_corp/capelladays2022-thermofisher-esi-tno-a-method-for-quantitative-evaluation-of-functional-chains-supported-by-a-capella-addon) and [video](https://www.youtube.com/watch?v=BEYfcVq2glo&list=PLfrEYVpSGVLzbLqLJCohL_Cfgu8EzuXtr&index=2)).
+A Capella addon for doing design space exploration (DSE) on Capella workflow models. To try it out, download a Capella release with this addon included from the [release page](https://github.com/TNO/capella-workflow-dse/releases) (Windows only). For more information on how to install and use see the [tutorial](tutorial/tutorial.pdf). This addon was presented on the Capella Days 2022 ([slides](https://www.slideshare.net/Obeo_corp/capelladays2022-thermofisher-esi-tno-a-method-for-quantitative-evaluation-of-functional-chains-supported-by-a-capella-addon) and [video](https://www.youtube.com/watch?v=BEYfcVq2glo&list=PLfrEYVpSGVLzbLqLJCohL_Cfgu8EzuXtr&index=2)).
 
 ![](images/dse.png)
 
