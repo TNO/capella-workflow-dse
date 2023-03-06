@@ -76,7 +76,7 @@ public class ModelChecker extends ResourceSetListenerImpl implements IEditingDom
 	    			
 	    		}
 			} catch (Exception e) {
-				Util.showPopupError("Model checker error", e.getMessage());
+				Util.showPopupError("Model checker error", e);
 				e.printStackTrace();
 			}
 		}

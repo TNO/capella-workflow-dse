@@ -76,7 +76,7 @@ public class ExportCommand extends AbstractHandler {
 							Util.showPopupOk("Export finished");
 							monitor.done();
 						} catch (Exception e) {
-							Util.showPopupError("Export failed", e.getMessage());
+							Util.showPopupError("Export failed", e);
 							e.printStackTrace();
 						}
 						return Status.OK_STATUS;

@@ -141,7 +141,7 @@ public class RunDSECommand extends AbstractHandler {
 							
 							monitor.done();
 						} catch (Exception e) {
-							Util.showPopupError("Run DSE failed", e.getMessage());
+							Util.showPopupError("Run DSE failed", e);
 							e.printStackTrace();
 						}
 						
@@ -194,7 +194,7 @@ public class RunDSECommand extends AbstractHandler {
 						outputAndRunNet(net, dsePath, name, line, mode, costs);
 					} catch (Exception e) {
 						e.printStackTrace();
-						Util.showPopupError("Run DSE failed", e.getMessage());
+						Util.showPopupError("Run DSE failed", e);
 					}
 					Util.refreshProject(prj);
 				});

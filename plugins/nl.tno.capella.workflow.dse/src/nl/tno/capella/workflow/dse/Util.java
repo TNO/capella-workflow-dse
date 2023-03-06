@@ -16,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -62,6 +64,13 @@ class Util {
 	
 	static void showPopupError(String message, String details) {
 		showPopup("error", message, details);
+	}
+	
+	static void showPopupError(String message, Exception exception) {
+		var sw = new StringWriter();
+		var pw = new PrintWriter(sw);
+		exception.printStackTrace(pw);
+		showPopup("error", message, exception.getMessage() + "\n" + sw.toString());
 	}
 	
 	private static void showPopup(String type, String message, String details) {

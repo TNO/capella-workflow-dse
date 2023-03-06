@@ -95,7 +95,7 @@ public class ImportExportPVMTCommand extends AbstractHandler {
 						    
 						    monitor.done();
 						} catch (Exception e) {
-							Util.showPopupError("PVMT export failed", e.getMessage());
+							Util.showPopupError("PVMT export failed", e);
 							e.printStackTrace();
 						}
 
