@@ -106,7 +106,7 @@ if __name__ == "__main__":
         if args.verbose: print(f"Wrote TRACE to '{trace_file}'")
 
         result_output = json.dumps({'time': events[-1][0] / 1000})
-        result_file = os.path.join(os.path.dirname(net.__file__), "result.json")
+        result_file = os.path.join(os.path.dirname(net.__file__), "result_snakes.json")
         with open(result_file, 'w') as f: f.write(result_output)
         if args.verbose: print(f"Wrote results to '{result_file}'")
 

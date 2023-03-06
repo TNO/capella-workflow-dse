@@ -238,7 +238,6 @@ public class RunDSECommand extends AbstractHandler {
 	
 	private void outputAndRunNet(PetriNet net, Path dsePath, String name, String pvmt, RunMode mode, List<Map<String, String>> costs) throws URISyntaxException, IOException, CoreException, InterruptedException {
 		var location = Paths.get(dsePath.toString(), name);
-		var resultFile = Paths.get(location.toString(), "result.json").toFile();
 		Util.removeDirectory(location);
 		
 		Float time = null;
@@ -260,6 +259,7 @@ public class RunDSECommand extends AbstractHandler {
 			Util.writeTextToFile(Paths.get(location.toString(), "sim.bat").toFile(), bat, StandardCharsets.UTF_8);
 			Util.writeTextToFile(Paths.get(location.toString(), "net.py").toFile(), net.toSnakes(), StandardCharsets.UTF_8, true);
 			PythonInterpeter.execute(simFile, new HashMap<String, String>());
+			var resultFile = Paths.get(location.toString(), "result_snakes.json").toFile();
 			time = Float.parseFloat(gson.fromJson(Util.readTextFromFile(resultFile), HashMap.class).get("time").toString());
 		}
 		
@@ -267,6 +267,7 @@ public class RunDSECommand extends AbstractHandler {
 		Util.writeTextToFile(pvmtFile, gson.toJson(gson.fromJson(pvmt, JsonObject.class)), StandardCharsets.UTF_8);
 		
 		// Write result.json
+		var resultFile = Paths.get(location.toString(), "result.json").toFile();
 		var traceFile = Paths.get(location.toString(), "trace.etf").toFile();
 		var result = new JsonObject();
 		result.addProperty("time", time);
