@@ -8,7 +8,7 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 
-import os, subprocess, glob, zipfile, sys, shutil
+import os, subprocess, glob, zipfile, sys, shutil, time
 
 REPOSITORIES = [
     'http://www.es.ele.tue.nl/rotalumis/repository/release',
@@ -45,7 +45,19 @@ for arch in os.listdir('capella-product'):
     path = os.path.join('capella-product', arch, 'capella')
 
     # Install dependencies
+    # This often fails due to connectity issues, therefore try multiple times
     print('Installing dependencies')
+    attempts = 5
+    for attempt in range(attempts):
+        if subprocess.call(COMMAND, cwd=path, shell=True) == 0:
+            print("Dependencies installed")
+            break
+        if attempt == attempts - 1:
+            raise Exception("Dependencies install failed (reached max attempts)")
+        else:
+            print(f"Dependencies install attempt {attempt + 1} failed, trying again in 60 seconds")
+            time.sleep(60)
+            
     if subprocess.call(COMMAND, cwd=path, shell=True) != 0:
         raise Exception("Dependencies install failed")
 
