@@ -117,8 +117,13 @@ public class Walker {
 					props.put("Duration", 1.0f);
 				}
 			} else if (child instanceof SequenceLink) {
-				links.add((SequenceLink) child);
-				properties.put(child, getProperties((CapellaElement) child));
+				var link = (SequenceLink) child;
+				var hasSourceAndTarget = link.getSource() != null && link.getTarget() != null;
+				var message = String.format("Sequence Link '%s' has no source or target, Sequence Link will be ignored", link.getId());
+				if (check(hasSourceAndTarget, Severity.WARNING, message, link)) {
+					links.add((SequenceLink) child);
+					properties.put(child, getProperties((CapellaElement) child));
+				}
 			} else if (child instanceof ControlNode) {
 				controlNodes.add((ControlNode) child);
 				properties.put(child, getProperties((CapellaElement) child));
