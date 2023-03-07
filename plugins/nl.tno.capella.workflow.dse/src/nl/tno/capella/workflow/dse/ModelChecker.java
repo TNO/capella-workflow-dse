@@ -9,6 +9,8 @@
  */
 package nl.tno.capella.workflow.dse;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -33,8 +35,10 @@ import org.eclipse.sirius.viewpoint.ViewpointPackage;
 import org.polarsys.capella.common.ef.domain.IEditingDomainListener;
 import org.polarsys.capella.common.platform.sirius.ted.SemanticEditingDomainFactory.SemanticEditingDomain;
 import org.polarsys.capella.core.data.fa.FunctionalChain;
+import org.polarsys.capella.core.data.fa.FunctionalChainInvolvementFunction;
 import org.polarsys.capella.core.data.fa.FunctionalChainReference;
 
+import nl.tno.capella.workflow.dse.walker.Diagnostic;
 import nl.tno.capella.workflow.dse.walker.Severity;
 import nl.tno.capella.workflow.dse.walker.Walker;
 
@@ -108,31 +112,66 @@ public class ModelChecker extends ResourceSetListenerImpl implements IEditingDom
 		var diagramSpec = descriptor.eCrossReferences().stream().filter(r -> r instanceof DSemanticDiagramSpec).findFirst().get();
 	    
 	    clearMarkers(fc, resource);
-	 
-	    for (var diag : walker.diagnostics) {
+	    
+	    var diagnostics = new ArrayList<Diagnostic>(walker.diagnostics);
+	    
+	    // Show information messages for hidden function and control nodes
+	    for (var function : walker.functions) {
+	    	if (!isVisible(getDiagramElement(diagramSpec, function))) {
+	    		var message = String.format("Function '%s' is not visible in diagram, this may produce unexpected behavior", ((FunctionalChainInvolvementFunction) function).getInvolved().getLabel());
+	    		diagnostics.add(new Diagnostic(Severity.INFO, message, function));
+	    	}
+	    }
+	    
+	    for (var controlNode : walker.controlNodes) {
+	    	if (!isVisible(getDiagramElement(diagramSpec, controlNode))) {
+	    		var message = String.format("Control Node '%s' is not visible in diagram, this may produce unexpected behavior", controlNode.getId());
+	    		diagnostics.add(new Diagnostic(Severity.INFO, message, controlNode));
+	    	}
+	    }
+	    
+	    // Show diagnostics
+	    @SuppressWarnings("serial")
+		var severityLookup  = new HashMap<Severity, Integer>() {{
+	        put(Severity.ERROR, IMarker.SEVERITY_ERROR);
+	        put(Severity.WARNING, IMarker.SEVERITY_WARNING);
+	        put(Severity.INFO, IMarker.SEVERITY_INFO);
+	    }};
+	    for (var diag : diagnostics) {
 	    	var marker = resource.createMarker(MARKER_TYPE);
 	    	marker.setAttribute(IMarker.MESSAGE, diag.message);
 	    	marker.setAttribute("org.eclipse.ui.editorID", "org.eclipse.sirius.diagram.ui.part.SiriusDiagramEditorID");
-	    	marker.setAttribute(IMarker.SEVERITY, diag.serverity == Severity.ERROR ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING);
+	    	marker.setAttribute(IMarker.SEVERITY, severityLookup.get(diag.serverity));
     		marker.setAttribute("DIAGRAM_DESCRIPTOR_URI", resourceUri);
     		marker.setAttribute("location", location);
     		
-    		Optional<EObject> diagramElement = null;
-    		if (diag.element instanceof FunctionalChain) {
-    			diagramElement = Optional.ofNullable(diagramSpec);
-    		} else {
-    			diagramElement = diagramSpec.eCrossReferences().stream().filter(d -> {
-        			return (d instanceof DNodeSpec && ((DNodeSpec) d).getTarget() == diag.element) ||
-        				(d instanceof DEdgeSpec && ((DEdgeSpec) d).getTarget() == diag.element);
-        		}).findFirst();
-    		}
-
+    		var diagramElement = getDiagramElement(diagramSpec, diag.element);
     		if (diagramElement.isEmpty()) continue;
     		var viewElementRef = new EObjectQuery(diagramElement.get()).getInverseReferences(NotationPackage.Literals.VIEW__ELEMENT).stream().findFirst();
     		if (viewElementRef.isEmpty()) continue;
     		var uriFragment = ((EObject) viewElementRef.get()).eResource().getURIFragment((EObject) viewElementRef.get());
     		marker.setAttribute("elementId", uriFragment);
 	    }
+	}
+	
+	private boolean isVisible(Optional<EObject> element) {
+		if (element.isEmpty()) return false;
+		else if (element.get() instanceof DNodeSpec) return ((DNodeSpec) element.get()).isVisible();
+		else if (element.get() instanceof DEdgeSpec) return ((DEdgeSpec) element.get()).isVisible();
+		return false;
+	}
+	
+	private Optional<EObject> getDiagramElement(EObject diagramSpec, EObject element) {
+		Optional<EObject> diagramElement = null;
+		if (element instanceof FunctionalChain) {
+			diagramElement = Optional.ofNullable(diagramSpec);
+		} else {
+			diagramElement = diagramSpec.eCrossReferences().stream().filter(d -> {
+    			return (d instanceof DNodeSpec && ((DNodeSpec) d).getTarget() == element) ||
+    				(d instanceof DEdgeSpec && ((DEdgeSpec) d).getTarget() == element);
+    		}).findFirst();
+		}
+		return diagramElement;
 	}
 	
 	private void clearMarkers(FunctionalChain fc, IResource resource) throws CoreException {

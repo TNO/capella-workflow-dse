@@ -12,4 +12,5 @@ package nl.tno.capella.workflow.dse.walker;
 public enum Severity {
 	ERROR,
 	WARNING,
+	INFO,
 }
