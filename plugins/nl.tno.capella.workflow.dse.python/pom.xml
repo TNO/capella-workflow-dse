@@ -17,13 +17,13 @@
 
     <groupId>nl.tno.capella.workflow.dse</groupId>
     <artifactId>nl.tno.capella.workflow.dse.python</artifactId>
-    <version>0.2.2</version>
+    <version>0.2.2-SNAPSHOT</version>
     <packaging>eclipse-plugin</packaging>
 
     <parent>
         <groupId>nl.tno.capella.workflow.dse</groupId>
         <artifactId>nl.tno.capella.workflow.dse.root</artifactId>
-        <version>0.2.2</version>
+        <version>0.2.2-SNAPSHOT</version>
         <relativePath>../../</relativePath>
     </parent>
 
